@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import sys
 from calendar import monthrange
 import odl_parser
+import gridding as grid
 
 def DnToRad ( data, band, gain ):
   """formula and table come from pg 25,26 in ASTER man"""
@@ -105,6 +106,18 @@ if __name__=="__main__":
   earth_sun_dist = sunDistance(julian_date)
   sza = getSZA(hdf)
   
+  # currently using volumetric mean radius from:
+  # http://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
+  radius = 6371
+  lat = lat = hdf.select('Latitude').get()
+  lon = hdf.select('Longitude').get()
+  
+  h_step = 492
+  v_step = 420
+  base_coords = grid.degreeToSphere(radius,lat,lon)
+  full_coords = grid.geoInterp(base_coords, h_step, v_step)
+
+
   b1 = hdf.select('ImageData1')
   db1 = b1.get()
   reflectance_b1 = RadToRefl ( DnToRad ( db1, 1, getGain(hdf,1) ), 1, earth_sun_dist, sza)
