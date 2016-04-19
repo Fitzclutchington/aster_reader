@@ -14,9 +14,9 @@ def degreeToSphere(lat,lon,radius):
     
     lat_rad = np.deg2rad(90 - lat)
     lon_rad = np.deg2rad(lon)
-    x = radius * np.cos(lon_rad) * np.sin(lat_rad)
-    y = radius * np.sin(lon_rad) * np.sin(lat_rad)
-    z = radius * np.cos(lon_rad)
+    x = radius * np.cos(lat_rad) * np.sin(lon_rad)
+    y = radius * np.sin(lat_rad) * np.sin(lon_rad)
+    z = radius * np.cos(lat_rad)
 
     coords = np.dstack((x,y,z))
     
@@ -26,8 +26,8 @@ def sphereToDegree(coords, radius):
     x = coords[:,:,0]
     y = coords[:,:,1]
     z = coords[:,:,2]
-
-    lat = np.rad2deg(np.arccos(z/radius))
+    
+    lat = 90 - np.rad2deg(np.arccos(z/radius))
     lon = np.rad2deg(np.arctan2(y,x))
     
 
