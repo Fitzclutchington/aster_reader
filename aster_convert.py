@@ -114,9 +114,26 @@ if __name__=="__main__":
   
   h_step = 492
   v_step = 420
-  base_coords = grid.degreeToSphere(radius,lat,lon)
+  base_coords = grid.degreeToSphere(lat,lon,radius)
+  corners = np.array([[base_coords[0,0,0],base_coords[0,1,0]],[base_coords[1,0,0],base_coords[1,1,0]]])
+  surface = grid.bilinearInterp(corners, h_step, v_step)
   full_coords = grid.geoInterp(base_coords, h_step, v_step)
+  geo_coords = grid.sphereToDegree(full_coords,radius)
+  
 
+  """
+  plt.figure()
+  plt.imshow(full_coords[:,:,0])
+  plt.colorbar()
+  
+  plt.figure()
+  plt.imshow(full_coords[:,:,1])
+  plt.colorbar()
+  
+  plt.figure()
+  plt.imshow(full_coords[:,:,2])
+  plt.colorbar() 
+  """
 
   b1 = hdf.select('ImageData1')
   db1 = b1.get()
@@ -135,7 +152,9 @@ if __name__=="__main__":
   rfb3 = reflectance_b3 / np.cos(sza)
   
   #np.dstack((rfb1,rfb2,rfb3))
-
+  """
+  plt.figure()
   plt.imshow ( reflectance_b1 ) #vmin=-0.2, vmax=0.8, interpolation='nearest')
   plt.colorbar()
   plt.show()
+  """

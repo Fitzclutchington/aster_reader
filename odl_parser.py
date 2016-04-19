@@ -348,9 +348,9 @@ def _postprocess(valuestr):
             return valuestr[1:-1]
     
     # If we get here, we still haven't returned anything.
-    logging.info(
-        "The value %s couldn't be parsed as " % valuestr
-        + "int, float, date, time, datetime. Returning it as string.")
+    #logging.info(
+    #    "The value %s couldn't be parsed as " % valuestr
+    #    + "int, float, date, time, datetime. Returning it as string.")
     return valuestr
 
 def parsemeta(metadataloc):
