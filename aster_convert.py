@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
-from osgeo import gdal
+from osgeo import gdal, osr
+from pyproj import Proj
 import numpy as np
 import pandas as pd
 from pyhdf import SD
@@ -120,6 +121,15 @@ if __name__=="__main__":
   full_coords = grid.geoInterp(base_coords, h_step, v_step)
   geo_coords = grid.sphereToDegree(full_coords,radius)
   
+  ds = gdal.Open('HDF4_EOS:EOS_SWATH:"AST_L1B_00307182015230811_20150720125749_13236.hdf":VNIR_Swath:ImageData1')
+  tmp_ds=gdal.AutoCreateWarpedVRT(ds)
+  projection=tmp_ds.GetProjection()
+  osrref = osr.SpatialReference()
+  osrref.ImportFromWkt(projection)
+  projstr = osrref.ExportToProj4()
+  utm = Proj(projstr)
+  
+  tx,ty = utm(geo_coords[:,:,1],geo_coords[:,:,0])
 
   """
   plt.figure()
