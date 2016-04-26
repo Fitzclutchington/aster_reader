@@ -12,11 +12,11 @@ def degreeToSphere(lat,lon,radius):
     -------
     coords: 11 x 11 x 3 numpy array of x,y,z coordinates"""
     
-    lat_rad = np.deg2rad(90 - lat)
+    lat_rad = np.deg2rad(lat)
     lon_rad = np.deg2rad(lon)
     x = radius * np.cos(lat_rad) * np.cos(lon_rad)
     y = radius * np.cos(lat_rad) * np.sin(lon_rad)
-    z = radius * np.cos(lat_rad)
+    z = radius * np.sin(lat_rad)
 
     coords = np.dstack((x,y,z))
     
@@ -27,7 +27,8 @@ def sphereToDegree(coords, radius):
     y = coords[:,:,1]
     z = coords[:,:,2]
     
-    lat = 90 - np.rad2deg(np.arccos(z/radius))
+    r = np.sqrt(x**2 + y**2 + z**2)
+    lat = np.rad2deg(np.arcsin(z/r))
     lon = np.rad2deg(np.arctan2(y,x))
     
 

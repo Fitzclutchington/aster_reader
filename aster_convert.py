@@ -10,7 +10,7 @@ import sys
 from calendar import monthrange
 import odl_parser
 import gridding as grid
-
+from products import MODIS
 def DnToRad ( data, band, gain ):
   """formula and table come from pg 25,26 in ASTER man"""
 
@@ -92,6 +92,13 @@ def getGain(hdf,band):
     sys.exit(1)
   return gain
 
+def getRadius(lat):
+
+  a = 6384.4*1000
+  b = 6352.8*1000
+  return np.sqrt((np.square(a*a*np.cos(lat)) + np.square(b*b*np.sin(lat)))/ \
+                 (np.square(a*np.cos(lat)) + np.square(b*np.sin(lat))) )
+
 if __name__=="__main__":
    
   filename = sys.argv[1] 
@@ -109,17 +116,19 @@ if __name__=="__main__":
   
   # currently using volumetric mean radius from:
   # http://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
-  radius = 6371
-  lat = lat = hdf.select('Latitude').get()
+  
+  lat = hdf.select('Latitude').get()
   lon = hdf.select('Longitude').get()
+  radius = np.mean(getRadius(np.deg2rad(lat)))
   
   h_step = 492
   v_step = 420
   base_coords = grid.degreeToSphere(lat,lon,radius)
   corners = np.array([[base_coords[0,0,0],base_coords[0,1,0]],[base_coords[1,0,0],base_coords[1,1,0]]])
-  surface = grid.bilinearInterp(corners, h_step, v_step)
+  #surface = grid.bilinearInterp(corners, h_step, v_step)
   full_coords = grid.geoInterp(base_coords, h_step, v_step)
   geo_coords = grid.sphereToDegree(full_coords,radius)
+  
   
   ds = gdal.Open('HDF4_EOS:EOS_SWATH:"AST_L1B_00307182015230811_20150720125749_13236.hdf":VNIR_Swath:ImageData1')
   tmp_ds=gdal.AutoCreateWarpedVRT(ds)
@@ -130,25 +139,22 @@ if __name__=="__main__":
   utm = Proj(projstr)
   
   tx,ty = utm(geo_coords[:,:,1],geo_coords[:,:,0])
+  
+  mhkm = 'modis/MOD02HKM.A2015158.2310.006.2015159075416.hdf'
+  m1km = 'modis/MOD021KM.A2015158.2310.006.2015159075416.hdf'
+  m03 = 'modis/MOD03.A2015158.2310.006.2015159052213.hdf'
+  mobj = MODIS(mhkm,m1km,m03)
 
-  """
-  plt.figure()
-  plt.imshow(full_coords[:,:,0])
-  plt.colorbar()
+  bands = mobj.reflectance([1,2,3,4])
+
+  pbands = mobj.project(projstr,tx,ty,bands,nn=1)
   
-  plt.figure()
-  plt.imshow(full_coords[:,:,1])
-  plt.colorbar()
   
-  plt.figure()
-  plt.imshow(full_coords[:,:,2])
-  plt.colorbar() 
-  """
+  
 
   b1 = hdf.select('ImageData1')
   db1 = b1.get()
   reflectance_b1 = RadToRefl ( DnToRad ( db1, 1, getGain(hdf,1) ), 1, earth_sun_dist, sza)
-  print reflectance_b1.shape
   rfb1 = reflectance_b1 / np.cos(sza)
   
   b2 = hdf.select('ImageData2')
@@ -162,9 +168,64 @@ if __name__=="__main__":
   rfb3 = reflectance_b3 / np.cos(sza)
   
   #np.dstack((rfb1,rfb2,rfb3))
-  """
+  
+  
   plt.figure()
+  plt.title("Modis band 1")
+  plt.imshow(pbands[0])
+  plt.colorbar()
+  
+  plt.figure()
+  plt.title("Modis band 2")
+  plt.imshow(pbands[1])
+  plt.colorbar()
+  
+  plt.figure()
+  plt.title("Modis band 4")
+  plt.imshow(pbands[3])
+  plt.colorbar()
+
+  plt.figure()
+  plt.title("Aster band 1")
   plt.imshow ( reflectance_b1 ) #vmin=-0.2, vmax=0.8, interpolation='nearest')
   plt.colorbar()
+
+  plt.figure()
+  plt.title("Aster band 2")
+  plt.imshow ( reflectance_b2 ) #vmin=-0.2, vmax=0.8, interpolation='nearest')
+  plt.colorbar()
+
+  plt.figure()
+  plt.title("Aster band 3N")
+  plt.imshow ( reflectance_b3 ) #vmin=-0.2, vmax=0.8, interpolation='nearest')
+  plt.colorbar()
+  plt.show()
+  
+  """
+  f, axarr = plt.subplots(2,3)
+  axarr[0,0].imshow(pbands[3])
+  axarr[0,0].set_title('Modis band 4')
+  axarr[0,0].colorbar()
+  
+  axarr[1,0].imshow(reflectance_b1)
+  axarr[1,0].set_title('Aster band 1')
+  axarr[1,0].colorbar()
+
+  axarr[0,1].imshow(pbands[0])
+  axarr[0,1].set_title('Modis band 1')
+  axarr[0,1].colorbar()
+
+  axarr[1,1].imshow(reflectance_b2)
+  axarr[1,1].set_title('Aster band 2')
+  axarr[1,1].colorbar()
+
+  axarr[0,2].imshow(pbands[1])
+  axarr[0,2].set_title('Modis band 2')
+  axarr[0,2].colorbar()
+
+  axarr[1,2].imshow(reflectance_b3)
+  axarr[1,2].set_title('Aster band 3N')
+  axarr[1,2].colorbar()
+ 
   plt.show()
   """
