@@ -79,12 +79,14 @@ if __name__=="__main__":
   reflectance_b3 = calc.RadToRefl ( calc.DnToRad ( db3N, 3, utils.getGain(hdf,'3N')), 3, earth_sun_dist, sza)
   rfb3 = reflectance_b3 / np.cos(sza)
   
-  rfb1_match = calc.hist_match2(reflectance_b1,*np.histogram(pbands[3],bins=100))
-  rfb1_match[edge_mask] = np.nan
-  rfb2_match = calc.hist_match2(reflectance_b2,*np.histogram(pbands[0],bins=100))
-  rfb2_match[edge_mask] = np.nan
-  rfb3_match = calc.hist_match2(reflectance_b3,*np.histogram(pbands[1],bins=100))
-  rfb3_match[edge_mask] = np.nan
+  rfb1_match = calc.hist_match2(reflectance_b1[~edge_mask],*np.histogram(pbands[3],bins=100))
+  #rfb1_match[edge_mask] = np.nan
+  rfb2_match = calc.hist_match2(reflectance_b2[~edge_mask],*np.histogram(pbands[0],bins=100))
+  #rfb2_match[edge_mask] = np.nan
+  rfb3_match = calc.hist_match2(reflectance_b3[~edge_mask],*np.histogram(pbands[1],bins=100))
+  #rfb3_match[edge_mask] = np.nan
+
+  
 
   """
   k = cKDTree(np.column_stack([pbands[3].ravel(),pbands[0].ravel(),pbands[1].ravel()]))
