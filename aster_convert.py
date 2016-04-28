@@ -11,6 +11,9 @@ from calendar import monthrange
 import odl_parser
 import gridding as grid
 from products import MODIS
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+
 def DnToRad ( data, band, gain ):
   """formula and table come from pg 25,26 in ASTER man"""
 
@@ -168,7 +171,7 @@ if __name__=="__main__":
   
   #np.dstack((rfb1,rfb2,rfb3))
   
-  
+  """
   plt.figure()
   plt.title("Modis band 1")
   plt.imshow(pbands[0])
@@ -178,9 +181,7 @@ if __name__=="__main__":
   plt.title("Aster band 2")
   plt.imshow ( reflectance_b2 ) #vmin=-0.2, vmax=0.8, interpolation='nearest')
   plt.colorbar()
-
-  plt.show()
-  """
+  
   plt.figure()
   plt.title("Modis band 2")
   plt.imshow(pbands[1])
@@ -207,31 +208,58 @@ if __name__=="__main__":
   plt.colorbar()
   plt.show()
   """
-  """
-  f, axarr = plt.subplots(2,3)
-  axarr[0,0].imshow(pbands[3])
-  axarr[0,0].set_title('Modis band 4')
-  axarr[0,0].colorbar()
   
-  axarr[1,0].imshow(reflectance_b1)
+  f, axarr = plt.subplots(2,3)
+  img1 = axarr[0,0].imshow(pbands[3])
+  axarr[0,0].set_title('Modis band 4')
+  div1 = make_axes_locatable(axarr[0,0])
+  cax1 = div1.append_axes("right", size="15%", pad=0.05)
+  cbar1 = plt.colorbar(img1, cax=cax1)
+  axarr[0,0].xaxis.set_visible(False)
+  axarr[0,0].yaxis.set_visible(False)
+
+
+
+  img2 = axarr[1,0].imshow(reflectance_b1)
   axarr[1,0].set_title('Aster band 1')
-  axarr[1,0].colorbar()
+  div2 = make_axes_locatable(axarr[1,0])
+  cax2 = div2.append_axes("right", size="15%", pad=0.05)
+  cbar2 = plt.colorbar(img2, cax=cax2)
+  axarr[1,0].xaxis.set_visible(False)
+  axarr[1,0].yaxis.set_visible(False)
 
-  axarr[0,1].imshow(pbands[0])
+  img3 = axarr[0,1].imshow(pbands[0])
   axarr[0,1].set_title('Modis band 1')
-  axarr[0,1].colorbar()
+  div3 = make_axes_locatable(axarr[0,1])
+  cax3 = div3.append_axes("right", size="15%", pad=0.05)
+  cbar3 = plt.colorbar(img3, cax=cax3)
+  axarr[0,1].xaxis.set_visible(False)
+  axarr[0,1].yaxis.set_visible(False)
 
-  axarr[1,1].imshow(reflectance_b2)
+  img4 = axarr[1,1].imshow(reflectance_b2)
   axarr[1,1].set_title('Aster band 2')
-  axarr[1,1].colorbar()
+  div4 = make_axes_locatable(axarr[1,1])
+  cax4 = div4.append_axes("right", size="15%", pad=0.05)
+  cbar4 = plt.colorbar(img4, cax=cax4)
+  axarr[1,1].xaxis.set_visible(False)
+  axarr[1,1].yaxis.set_visible(False)
 
-  axarr[0,2].imshow(pbands[1])
+  img5 = axarr[0,2].imshow(pbands[1])
   axarr[0,2].set_title('Modis band 2')
-  axarr[0,2].colorbar()
+  div5 = make_axes_locatable(axarr[0,2])
+  cax5 = div5.append_axes("right", size="15%", pad=0.05)
+  cbar5 = plt.colorbar(img5, cax=cax5)
+  axarr[0,2].xaxis.set_visible(False)
+  axarr[0,2].yaxis.set_visible(False)
 
-  axarr[1,2].imshow(reflectance_b3)
+
+  img6 = axarr[1,2].imshow(reflectance_b3)
   axarr[1,2].set_title('Aster band 3N')
-  axarr[1,2].colorbar()
- 
+  div6 = make_axes_locatable(axarr[1,2])
+  cax6 = div6.append_axes("right", size="15%", pad=0.05)
+  cbar6 = plt.colorbar(img6, cax=cax6)
+  axarr[1,2].xaxis.set_visible(False)
+  axarr[1,2].yaxis.set_visible(False)
+
   plt.show()
-  """
+  plt.savefig('modis_aster_projection.png')
