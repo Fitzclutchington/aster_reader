@@ -254,7 +254,7 @@ if __name__=="__main__":
 
   axarr[2,0].plot(x1,y1,'-r',label="aster")
   axarr[2,0].plot(x2,y2,'-k',label="modis")
-  axarr[2,0].plot(x3,y3,'--b',label="match")
+  axarr[2,0].plot(x3,y3,'--b',lw=3,label="match")
   axarr[2,0].set_title('Aster 1 Modis 4 Matched Histogram')
   axarr[2,0].set_xlabel('Pixel value')
   axarr[2,0].set_ylabel('Cumulative %')
@@ -282,7 +282,7 @@ if __name__=="__main__":
 
   axarr[2,1].plot(x1,y1,'-r',label="aster")
   axarr[2,1].plot(x2,y2,'-k',label="modis")
-  axarr[2,1].plot(x3,y3,'--b',label="match")
+  axarr[2,1].plot(x3,y3,'--b',lw=3,label="match")
   axarr[2,1].set_title('Aster 2 Modis 1 Matched Histogram')
   axarr[2,1].set_xlabel('Pixel value')
   axarr[2,1].set_ylabel('Cumulative %')
@@ -311,7 +311,7 @@ if __name__=="__main__":
 
   axarr[2,2].plot(x1,y1,'-r',label="aster")
   axarr[2,2].plot(x2,y2,'-k',label="modis")
-  axarr[2,2].plot(x3,y3,'--b',label="match")
+  axarr[2,2].plot(x3,y3,'--b',lw=3,label="match")
   axarr[2,2].set_title('Aster 3 Modis 2 Matched Histogram')
   axarr[2,2].set_xlabel('Pixel value')
   axarr[2,2].set_ylabel('Cumulative %')
