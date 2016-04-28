@@ -209,7 +209,7 @@ if __name__=="__main__":
   plt.show()
   """
   
-  f, axarr = plt.subplots(2,3)
+  fig, axarr = plt.subplots(2,3, figsize=(15,10))
   img1 = axarr[0,0].imshow(pbands[3])
   axarr[0,0].set_title('Modis band 4')
   div1 = make_axes_locatable(axarr[0,0])
@@ -262,4 +262,4 @@ if __name__=="__main__":
   axarr[1,2].yaxis.set_visible(False)
 
   plt.show()
-  plt.savefig('modis_aster_projection.png')
+  fig.savefig('modis_aster_projection.png')
