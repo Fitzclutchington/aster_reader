@@ -30,7 +30,7 @@ if __name__=="__main__":
   lon = hdf.select('Longitude').get()
   radius = utils.getRadius(np.deg2rad(lat))
   
-  h_step = 492
+  h_step = 498
   v_step = 420
   base_coords = grid.degreeToSphere(lat,lon,radius)
   corners = np.array([[base_coords[0,0,0],base_coords[0,1,0]],[base_coords[1,0,0],base_coords[1,1,0]]])
