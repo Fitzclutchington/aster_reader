@@ -11,6 +11,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy.spatial import cKDTree
 from scipy.io import savemat
 import calculations as calc
+import utils
 
 if __name__=="__main__":
    
