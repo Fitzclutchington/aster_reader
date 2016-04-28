@@ -204,17 +204,20 @@ if __name__=="__main__":
     
 
   b1 = hdf.select('ImageData1')
-  db1 = b1.get()
+  db1 = b1.get().astype('f8')
+  db1[db1==0] = np.nan
   reflectance_b1 = RadToRefl ( DnToRad ( db1, 1, getGain(hdf,1) ), 1, earth_sun_dist, sza)
   rfb1 = reflectance_b1 / np.cos(sza)
   
   b2 = hdf.select('ImageData2')
-  db2 = b2.get()
+  db2 = b2.get().astype('f8')
+  db2[db2==0] = np.nan
   reflectance_b2 = RadToRefl ( DnToRad ( db2, 2, getGain(hdf,2)), 2, earth_sun_dist, sza)
   rfb2 = reflectance_b2 / np.cos(sza)
 
   b3N = hdf.select('ImageData3N')
-  db3N = b3N.get()
+  db3N = b3N.get().astype('f8') 
+  db3N[db3N==0] = np.nan
   reflectance_b3 = RadToRefl ( DnToRad ( db3N, 3, getGain(hdf,'3N')), 3, earth_sun_dist, sza)
   rfb3 = reflectance_b3 / np.cos(sza)
   
@@ -223,7 +226,7 @@ if __name__=="__main__":
   rfb3_match = hist_match(reflectance_b3,pbands[1])  
 
   fig, axarr = plt.subplots(3,3, figsize=(30,20))
-  img00 = axarr[0,0].imshow(pbands[3], vmin=0,vmax=1)
+  img1 = axarr[0,0].imshow(pbands[3], vmin=0,vmax=1)
   axarr[0,0].set_title('Modis band 4')
   div1 = make_axes_locatable(axarr[0,0])
   cax1 = div1.append_axes("right", size="15%", pad=0.05)
@@ -233,7 +236,7 @@ if __name__=="__main__":
 
   
 
-  img10 = axarr[1,0].imshow(rfb1_match, vmin=0,vmax=1)
+  img2 = axarr[1,0].imshow(rfb1_match, vmin=0,vmax=1)
   axarr[1,0].set_title('Aster band 1')
   div2 = make_axes_locatable(axarr[1,0])
   cax2 = div2.append_axes("right", size="15%", pad=0.05)
@@ -312,3 +315,4 @@ if __name__=="__main__":
 
   fig.savefig('modis_aster_projection.png')
   plt.close()
+  
