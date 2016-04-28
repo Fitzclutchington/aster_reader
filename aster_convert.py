@@ -64,19 +64,19 @@ if __name__=="__main__":
   db1 = b1.get().astype('f8')
   edge_mask = db1==0
   db1[edge_mask] = np.nan  
-  reflectance_b1 = calc.RadToRefl ( calc.DnToRad ( db1, 1, getGain(hdf,1) ), 1, earth_sun_dist, sza)
+  reflectance_b1 = calc.RadToRefl ( calc.DnToRad ( db1, 1, utils.getGain(hdf,1) ), 1, earth_sun_dist, sza)
   rfb1 = reflectance_b1 / np.cos(sza)
   
   b2 = hdf.select('ImageData2')
   db2 = b2.get().astype('f8')
   db2[edge_mask] = np.nan
-  reflectance_b2 = calc.RadToRefl ( calc.DnToRad ( db2, 2, getGain(hdf,2)), 2, earth_sun_dist, sza)
+  reflectance_b2 = calc.RadToRefl ( calc.DnToRad ( db2, 2, utils.getGain(hdf,2)), 2, earth_sun_dist, sza)
   rfb2 = reflectance_b2 / np.cos(sza)
 
   b3N = hdf.select('ImageData3N')
   db3N = b3N.get().astype('f8') 
   db3N[edge_mask] = np.nan
-  reflectance_b3 = calc.RadToRefl ( calc.DnToRad ( db3N, 3, getGain(hdf,'3N')), 3, earth_sun_dist, sza)
+  reflectance_b3 = calc.RadToRefl ( calc.DnToRad ( db3N, 3, utils.getGain(hdf,'3N')), 3, earth_sun_dist, sza)
   rfb3 = reflectance_b3 / np.cos(sza)
   
   rfb1_match = calc.hist_match(reflectance_b1,pbands[3])
