@@ -81,10 +81,10 @@ def hist_match2(Z,h,bins):
     cdf = np.cumsum(h)
 
     hQ = np.histogram(Z,bins=bins)
-    cdfQ = cumsum(hQ)
+    cdfQ = np.cumsum(hQ)
 
     c=0; kQ=1
-    while (c<sum(hQ)) and (kQ<l-1):
+    while (c<np.sum(hQ)) and (kQ<l-1):
         kQ = np.min(np.where(cdfQ>c))
         k = np.max(np.where(cdf<cdfQ[kQ]))
         g[kQ]=bins[k+1]
