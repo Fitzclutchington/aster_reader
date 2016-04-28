@@ -2,6 +2,9 @@ import sys
 from calendar import monthrange
 import odl_parser
 import os
+from pyhdf import SD
+import pandas as pd
+import numpy as np
 
 def filenameToJulian(filename):
     file_string = filename.split('_')

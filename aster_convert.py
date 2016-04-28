@@ -2,8 +2,8 @@
 from osgeo import gdal, osr
 from pyproj import Proj
 import numpy as np
-from pyhdf import SD
 import matplotlib.pyplot as plt
+from pyhdf import SD
 import sys
 import gridding as grid
 from products import MODIS
