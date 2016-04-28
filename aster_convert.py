@@ -205,25 +205,29 @@ if __name__=="__main__":
 
   b1 = hdf.select('ImageData1')
   db1 = b1.get().astype('f8')
-  db1[db1==0] = np.nan
+  edge_mask = db1==0
+  db1[edge_mask] = np.nan  
   reflectance_b1 = RadToRefl ( DnToRad ( db1, 1, getGain(hdf,1) ), 1, earth_sun_dist, sza)
   rfb1 = reflectance_b1 / np.cos(sza)
   
   b2 = hdf.select('ImageData2')
   db2 = b2.get().astype('f8')
-  db2[db2==0] = np.nan
+  db2[edge_mask] = np.nan
   reflectance_b2 = RadToRefl ( DnToRad ( db2, 2, getGain(hdf,2)), 2, earth_sun_dist, sza)
   rfb2 = reflectance_b2 / np.cos(sza)
 
   b3N = hdf.select('ImageData3N')
   db3N = b3N.get().astype('f8') 
-  db3N[db3N==0] = np.nan
+  db3N[edge_mask] = np.nan
   reflectance_b3 = RadToRefl ( DnToRad ( db3N, 3, getGain(hdf,'3N')), 3, earth_sun_dist, sza)
   rfb3 = reflectance_b3 / np.cos(sza)
   
   rfb1_match = hist_match(reflectance_b1,pbands[3])
+  rfb1_match[edge_mask] = np.nan
   rfb2_match = hist_match(reflectance_b2,pbands[0])
-  rfb3_match = hist_match(reflectance_b3,pbands[1])  
+  rfb2_match[edge_mask] = np.nan
+  rfb3_match = hist_match(reflectance_b3,pbands[1])
+  rfb3_match[edge_mask] = np.nan  
 
   fig, axarr = plt.subplots(3,3, figsize=(30,20))
   img1 = axarr[0,0].imshow(pbands[3], vmin=0,vmax=1)
