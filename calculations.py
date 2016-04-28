@@ -84,7 +84,7 @@ def hist_match2(Z,h,bins):
     cdfQ = cumsum(hQ)
 
     c=0; kQ=1
-    while c<sum(hQ) && kQ<l-1:
+    while (c<sum(hQ)) and (kQ<l-1):
         kQ = np.min(np.where(cdfQ>c))
         k = np.max(np.where(cdf<cdfQ[kQ]))
         g[kQ]=bins[k+1]
@@ -96,7 +96,7 @@ def hist_match2(Z,h,bins):
     p = np.polyfit(bins,np.arange(1,l),1)
     idx = np.round(np.polyval(p,Z))
     return g[idx]
-    
+
 def ecdf(x):
     """convenience function for computing the empirical CDF"""
     vals, counts = np.unique(x, return_counts=True)
