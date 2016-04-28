@@ -85,9 +85,6 @@ if __name__=="__main__":
   rfb3_match = calc.hist_match(reflectance_b3,pbands[1])
   rfb3_match[edge_mask] = np.nan  
   
-  savemat('modis4_aster1.mat',{'modis':pbands[3],'aster':rfb1_match})
-
-  
   k = cKDTree(np.column_stack([pbands[3].ravel(),pbands[0].ravel(),pbands[1].ravel()]))
   dist, ind = k.query(np.column_stack([rfb1_match[~edge_mask],rfb2_match[~edge_mask],rfb3_match[~edge_mask]]),n_jobs=20, eps=0.1)
   
@@ -193,4 +190,3 @@ if __name__=="__main__":
 
   fig.savefig('modis_aster_projection.png')
   plt.close()
-  """
