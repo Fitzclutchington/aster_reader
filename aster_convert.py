@@ -119,7 +119,7 @@ if __name__=="__main__":
   
   lat = hdf.select('Latitude').get()
   lon = hdf.select('Longitude').get()
-  radius = np.mean(getRadius(np.deg2rad(lat)))
+  radius = getRadius(np.deg2rad(lat))
   
   h_step = 492
   v_step = 420
@@ -127,10 +127,11 @@ if __name__=="__main__":
   corners = np.array([[base_coords[0,0,0],base_coords[0,1,0]],[base_coords[1,0,0],base_coords[1,1,0]]])
   #surface = grid.bilinearInterp(corners, h_step, v_step)
   full_coords = grid.geoInterp(base_coords, h_step, v_step)
-  geo_coords = grid.sphereToDegree(full_coords,radius)
+  geo_coords = grid.sphereToDegree(full_coords)
   
+  geo_coords[:,:,0] = grid.toGeocentric(geo_coords[:,:,0])
   
-  ds = gdal.Open('HDF4_EOS:EOS_SWATH:"AST_L1B_00307182015230811_20150720125749_13236.hdf":VNIR_Swath:ImageData1')
+  ds = gdal.Open('HDF4_EOS:EOS_SWATH:"{}":VNIR_Swath:ImageData1'.format(filename))
   tmp_ds=gdal.AutoCreateWarpedVRT(ds)
   projection=tmp_ds.GetProjection()
   osrref = osr.SpatialReference()
@@ -148,9 +149,7 @@ if __name__=="__main__":
   bands = mobj.reflectance([1,2,3,4])
 
   pbands = mobj.project(projstr,tx,ty,bands,nn=1)
-  
-  
-  
+    
 
   b1 = hdf.select('ImageData1')
   db1 = b1.get()
@@ -176,14 +175,21 @@ if __name__=="__main__":
   plt.colorbar()
   
   plt.figure()
+  plt.title("Aster band 2")
+  plt.imshow ( reflectance_b2 ) #vmin=-0.2, vmax=0.8, interpolation='nearest')
+  plt.colorbar()
+
+  plt.show()
+  """
+  plt.figure()
   plt.title("Modis band 2")
   plt.imshow(pbands[1])
   plt.colorbar()
-  
+
   plt.figure()
   plt.title("Modis band 4")
   plt.imshow(pbands[3])
-  plt.colorbar()
+  plt.colorbar()      
 
   plt.figure()
   plt.title("Aster band 1")
@@ -200,7 +206,7 @@ if __name__=="__main__":
   plt.imshow ( reflectance_b3 ) #vmin=-0.2, vmax=0.8, interpolation='nearest')
   plt.colorbar()
   plt.show()
-  
+  """
   """
   f, axarr = plt.subplots(2,3)
   axarr[0,0].imshow(pbands[3])

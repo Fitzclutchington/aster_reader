@@ -22,7 +22,7 @@ def degreeToSphere(lat,lon,radius):
     
     return coords
 
-def sphereToDegree(coords, radius):
+def sphereToDegree(coords):
     x = coords[:,:,0]
     y = coords[:,:,1]
     z = coords[:,:,2]
@@ -55,11 +55,11 @@ def bilinearInterp(corners, h_step, v_step):
     #surface = np.zeros((v_step,h_step))
     surface = []
 
-    xt = np.linspace(ul,ur,num=h_step,endpoint=False)
-    xb = np.linspace(ll,lr,num=h_step,endpoint=False)
+    xt = np.linspace(ul,ur,num=h_step)#,endpoint=False)
+    xb = np.linspace(ll,lr,num=h_step)#,endpoint=False)
 
     for i,j in zip(xt,xb):
-        surface.append(np.linspace(i,j,num=v_step,endpoint=False))
+        surface.append(np.linspace(i,j,num=v_step))#,endpoint=False))
 
     return np.column_stack(surface)
 
@@ -100,13 +100,16 @@ def geoInterp(coords,h_step, v_step):
         dim = coords[:,:,d]
         for i in range(coords.shape[0]-1):
             for j in range(coords.shape[1]-1):
-                ur = dim[i,j]
-                ul = dim[i,j+1]
-                lr = dim[i+1,j]
-                ll = dim[i+1,j+1]
-                corners = np.array(([ur,ul],[lr,ll]))
+                ul = dim[i,j]
+                ur = dim[i,j+1]
+                ll = dim[i+1,j]
+                lr = dim[i+1,j+1]
+                corners = np.array(([ul,ur],[ll,lr]))
                 surface = bilinearInterp(corners,h_step,v_step)
                 full_coords[i*v_step:(i+1)*v_step,j*h_step:(j+1)*h_step,d] = surface
 
     return full_coords
 
+def toGeocentric(coords):
+    geocentric = np.arctan2(np.tan(np.deg2rad(coords)),0.99330562)
+    return np.rad2deg(geocentric)
