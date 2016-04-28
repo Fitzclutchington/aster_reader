@@ -12,7 +12,7 @@ import odl_parser
 import gridding as grid
 from products import MODIS
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-
+from scipy.spatial import cKDTree
 
 def DnToRad ( data, band, gain ):
   """formula and table come from pg 25,26 in ASTER man"""
@@ -151,6 +151,17 @@ def ecdf(x):
     ecdf /= ecdf[-1]
     return vals, ecdf
 
+def pca(Q, ncomp):
+    """Principal component analysis.
+
+    Returns `ncomp` principal compenents of `Q`.
+
+    """
+    Q = Q - np.mean(Q, axis=0)
+    w, v = np.linalg.eig(np.cov(Q.T))
+    eigorder = w.argsort()
+    return np.dot(Q, v[:,eigorder[-ncomp:]])
+
 if __name__=="__main__":
    
   filename = sys.argv[1] 
@@ -228,7 +239,22 @@ if __name__=="__main__":
   rfb2_match[edge_mask] = np.nan
   rfb3_match = hist_match(reflectance_b3,pbands[1])
   rfb3_match[edge_mask] = np.nan  
+  
+  k = cKDTree(np.column_stack([pbands[3].ravel(),pbands[0].ravel(),pbands[1].ravel()]))
+  dist, ind = k.query(np.column_stack([rfb1_match[~edge_mask],rfb2_match[~edge_mask],rfb3_match[~edge_mask]]))
+  
+  #nearest neighbor
+  nnvals = pbands[2][ind]
+  
+  aster_blue = np.zeros(rfb1_match.shape)
+  aster_blue[~edge_mask] = nnvals
+  aster_blue[edge_mask] = np.nan
 
+  plt.figure()
+  plt.imshow(np.dstack([rfb2_match,rfb1_match,aster_blue]))
+  plt.colorbar()
+
+  """
   fig, axarr = plt.subplots(3,3, figsize=(30,20))
   img1 = axarr[0,0].imshow(pbands[3], vmin=0,vmax=1)
   axarr[0,0].set_title('Modis band 4')
@@ -319,4 +345,4 @@ if __name__=="__main__":
 
   fig.savefig('modis_aster_projection.png')
   plt.close()
-  
+  """
