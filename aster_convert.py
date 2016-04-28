@@ -79,13 +79,14 @@ if __name__=="__main__":
   reflectance_b3 = calc.RadToRefl ( calc.DnToRad ( db3N, 3, utils.getGain(hdf,'3N')), 3, earth_sun_dist, sza)
   rfb3 = reflectance_b3 / np.cos(sza)
   
-  rfb1_match = calc.hist_match(reflectance_b1,pbands[3])
+  rfb1_match = calc.hist_match2(reflectance_b1,*np.histogram(pbands[3],bins=100))
   rfb1_match[edge_mask] = np.nan
-  rfb2_match = calc.hist_match(reflectance_b2,pbands[0])
+  rfb2_match = calc.hist_match2(reflectance_b2,*np.histogram(pbands[0],bins=100))
   rfb2_match[edge_mask] = np.nan
-  rfb3_match = calc.hist_match(reflectance_b3,pbands[1])
-  rfb3_match[edge_mask] = np.nan  
-  
+  rfb3_match = calc.hist_match2(reflectance_b3,*np.histogram(pbands[1],bins=100))
+  rfb3_match[edge_mask] = np.nan
+
+  """
   k = cKDTree(np.column_stack([pbands[3].ravel(),pbands[0].ravel(),pbands[1].ravel()]))
   dist, ind = k.query(np.column_stack([rfb1_match[~edge_mask],rfb2_match[~edge_mask],rfb3_match[~edge_mask]]),n_jobs=20, eps=0.4)
   print "cKDTree query completed"
@@ -100,7 +101,7 @@ if __name__=="__main__":
   plt.figure()
   plt.imshow(np.dstack([rfb2_match,rfb1_match,aster_blue]))
   plt.colorbar()
-
+  """
   
   fig, axarr = plt.subplots(3,3, figsize=(30,20))
   img1 = axarr[0,0].imshow(pbands[3], vmin=0,vmax=1)

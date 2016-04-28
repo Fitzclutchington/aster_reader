@@ -32,7 +32,7 @@ def RadToRefl ( radiance, band, dist, sza, solar_constant_scheme="ThomeEtAl2" ):
   toaRefl = (np.pi*radiance*dist*dist)/(solar_constant[band-1][schemes[solar_constant_scheme]]*\
         np.cos ( np.radians (sza) ))
   return toaRefl
-  
+
 def hist_match(source, template):
     """
     Adjust the pixel values of a grayscale image such that its histogram
@@ -75,6 +75,28 @@ def hist_match(source, template):
 
     return interp_t_values[bin_idx].reshape(oldshape)
 
+def hist_match2(Z,h,bins):
+    l = len(bins)
+    g = np.nan*np.ones((1,l))
+    cdf = np.cumsum(h)
+
+    hQ = np.hist(Z,bins=bins)
+    cdfQ = cumsum(hQ)
+
+    c=0; kQ=1
+    while c<sum(hQ) && kQ<l-1:
+        kQ = np.min(np.where(cdfQ>c))
+        k = np.max(np.where(cdf<cdfQ[kQ]))
+        g[kQ]=bins[k+1]
+        kQ+=1
+        c=cdfQ[kQ]
+    
+    g[~np.isfinite(g)] = np.interp(bins[~np.isfinite(g)],bins[np.isfinite(g)],g[isfinite(g)])
+
+    p = np.polyfit(bins,np.arange(1,l),1)
+    idx = np.round(np.polyval(p,Z))
+    return g[idx]
+    
 def ecdf(x):
     """convenience function for computing the empirical CDF"""
     vals, counts = np.unique(x, return_counts=True)
