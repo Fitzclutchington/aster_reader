@@ -80,7 +80,7 @@ def hist_match2(Z,h,bins):
     g = np.nan*np.ones((1,l))
     cdf = np.cumsum(h)
 
-    hQ = np.histogram(Z,bins=bins)
+    hQ,_ = np.histogram(Z,bins=bins)
     cdfQ = np.cumsum(hQ)
 
     c=0; kQ=1
