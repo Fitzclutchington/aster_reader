@@ -93,7 +93,7 @@ def hist_match2(Z,h,bins):
     
     g[~np.isfinite(g)] = np.interp(bins[~np.isfinite(g)],bins[np.isfinite(g)],g[isfinite(g)])
 
-    p = np.polyfit(bins,np.arange(1,l),1)
+    p = np.polyfit(bins,np.arange(1,l+1),1)
     idx = np.round(np.polyval(p,Z))
     return g[idx]
 
@@ -114,3 +114,35 @@ def pca(Q, ncomp):
     w, v = np.linalg.eig(np.cov(Q.T))
     eigorder = w.argsort()
     return np.dot(Q, v[:,eigorder[-ncomp:]])
+
+def hist_match3(source,target,nbins=100):
+    D1 = source.ravel()
+    m = D1.min()
+    M = D1.max()
+    H = np.zeros((2, nbins))
+
+
+    D = target.copy()
+    D_shape = D.shape
+    D = D.ravel()
+    x = np.linspace(min(m, np.min(D)), max(M, np.max(D)), nbins+1)
+    WH, _ = np.histogram(D1, bins=x, normed=True)
+    H[0,:] = np.cumsum(WH/float(len(D1)))
+    WH, _ = np.histogram(D, bins=x, normed=True)
+    H[1,:] = np.cumsum(WH/float(len(D)))
+    y = np.zeros(nbins)
+    for i in xrange(nbins):
+        indL = np.where(H[0,:] <= H[1,i])[0]
+        if len(indL) == 0 or len(indL) == nbins:
+            y[i] = x[i]
+        else:
+            pos = indL.max()
+            xL = x[pos]
+            fL = H[0, pos]
+            xR = x[pos+1]
+            fR = H[0, pos+1]
+            y[i] = xL + (H[1,i]-fL)*(xR-xL)/float(fR-fL)
+
+    B = np.interp(D, x[:-1], y)
+    
+    return B.reshape(D_shape)

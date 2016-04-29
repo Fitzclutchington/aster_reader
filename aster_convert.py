@@ -79,11 +79,11 @@ if __name__=="__main__":
   reflectance_b3 = calc.RadToRefl ( calc.DnToRad ( db3N, 3, utils.getGain(hdf,'3N')), 3, earth_sun_dist, sza)
   rfb3 = reflectance_b3 / np.cos(sza)
   
-  rfb1_match = calc.hist_match2(reflectance_b1[~edge_mask],*np.histogram(pbands[3][~edge_mask],bins=100))
+  rfb1_match = calc.hist_match3(reflectance_b1[~edge_mask],pbands[3][~edge_mask])
   #rfb1_match[edge_mask] = np.nan
-  rfb2_match = calc.hist_match2(reflectance_b2[~edge_mask],*np.histogram(pbands[0][~edge_mask],bins=100))
+  rfb2_match = calc.hist_match3(reflectance_b2[~edge_mask],pbands[0][~edge_mask])
   #rfb2_match[edge_mask] = np.nan
-  rfb3_match = calc.hist_match2(reflectance_b3[~edge_mask],*np.histogram(pbands[1][~edge_mask],bins=100))
+  rfb3_match = calc.hist_match3(reflectance_b3[~edge_mask],pbands[1][~edge_mask])
   #rfb3_match[edge_mask] = np.nan
 
 
