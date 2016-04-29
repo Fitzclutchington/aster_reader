@@ -85,8 +85,15 @@ if __name__=="__main__":
   #rfb2_match[edge_mask] = np.nan
   rfb3_match = calc.hist_match3(reflectance_b3[~edge_mask],pbands[1][~edge_mask])
   #rfb3_match[edge_mask] = np.nan
+  
+  rfb1_match_full = np.zeros(edge_mask.shape)
+  rfb1_match_full[~edge_mask]=rfb1_match
+  
+  rfb2_match_full = np.zeros(reflectance_b1.shape)
+  rfb2_match_full[~edge_mask]=rfb2_match
 
-
+  rfb3_match_full = np.zeros(reflectance_b1.shape)
+  rfb3_match_full[~edge_mask]=rfb3_match
 
   """
   k = cKDTree(np.column_stack([pbands[3].ravel(),pbands[0].ravel(),pbands[1].ravel()]))
