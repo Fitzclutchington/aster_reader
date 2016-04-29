@@ -123,7 +123,7 @@ if __name__=="__main__":
 
   
 
-  img2 = axarr[1,0].imshow(rfb1_match, vmin=0,vmax=1)
+  img2 = axarr[1,0].imshow(rfb1_match_full, vmin=0,vmax=1)
   axarr[1,0].set_title('Aster band 1')
   div2 = make_axes_locatable(axarr[1,0])
   cax2 = div2.append_axes("right", size="15%", pad=0.05)
@@ -151,7 +151,7 @@ if __name__=="__main__":
   axarr[0,1].xaxis.set_visible(False)
   axarr[0,1].yaxis.set_visible(False)
 
-  img4 = axarr[1,1].imshow(rfb2_match, vmin=0,vmax=1)
+  img4 = axarr[1,1].imshow(rfb2_match_full, vmin=0,vmax=1)
   axarr[1,1].set_title('Aster band 2')
   div4 = make_axes_locatable(axarr[1,1])
   cax4 = div4.append_axes("right", size="15%", pad=0.05)
@@ -180,7 +180,7 @@ if __name__=="__main__":
   axarr[0,2].yaxis.set_visible(False)
 
 
-  img6 = axarr[1,2].imshow(rfb3_match, vmin=0,vmax=1)
+  img6 = axarr[1,2].imshow(rfb3_match_full, vmin=0,vmax=1)
   axarr[1,2].set_title('Aster band 3N')
   div6 = make_axes_locatable(axarr[1,2])
   cax6 = div6.append_axes("right", size="15%", pad=0.05)
