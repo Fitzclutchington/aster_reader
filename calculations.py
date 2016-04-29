@@ -116,13 +116,13 @@ def pca(Q, ncomp):
     return np.dot(Q, v[:,eigorder[-ncomp:]])
 
 def hist_match3(source,target,nbins=100):
-    D1 = source.ravel()
+    D1 = target.ravel()
     m = D1.min()
     M = D1.max()
     H = np.zeros((2, nbins))
 
 
-    D = target.copy()
+    D = source.copy()
     D_shape = D.shape
     D = D.ravel()
     x = np.linspace(min(m, np.min(D)), max(M, np.max(D)), nbins+1)
