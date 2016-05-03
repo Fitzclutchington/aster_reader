@@ -50,9 +50,9 @@ if __name__=="__main__":
   
   tx,ty = utm(geo_coords[:,:,1],geo_coords[:,:,0])
   
-  mhkm = 'modis0722/MOD02HKM.A2015203.0605.006.2015203195834.hdf'
-  m1km = 'modis0722/MOD021KM.A2015203.0605.006.2015203195834.hdf'
-  m03 =  'modis0722/MOD03.A2015203.0605.006.2015203132909.hdf'
+  mhkm = 'modis0622/MOD02HKM.A2015173.2230.006.2015174183506.hdf'
+  m1km = 'modis0622/MOD021KM.A2015173.2230.006.2015174183506.hdf'
+  m03 =  'modis0622/MOD03.A2015173.2230.006.2015174172932.hdf'
   mobj = MODIS(mhkm,m1km,m03)
   
   bands = mobj.reflectance([1,2,3,4])
