@@ -50,16 +50,21 @@ if __name__=="__main__":
   
   tx,ty = utm(geo_coords[:,:,1],geo_coords[:,:,0])
   
-  mhkm = 'modis0622/MOD021KM.A2015173.2230.006.2015174183506.hdf'
-  m1km = 'modis0622/MOD02HKM.A2015173.2230.006.2015174183506.hdf'
+  mhkm = 'modis0622/MOD02HKM.A2015173.2230.006.2015174183506.hdf'
+  m1km = 'modis0622/MOD021KM.A2015173.2230.006.2015174183506.hdf'
   m03 =  'modis0622/MOD03.A2015173.2230.006.2015174172932.hdf'
   mobj = MODIS(mhkm,m1km,m03)
-
+  
   bands = mobj.reflectance([1,2,3,4])
 
   pbands = mobj.project(projstr,tx,ty,bands,nn=1)
-    
-
+  color_img = modis.rgb()    
+  
+  plt.figure()
+  plt.imshow(color_img)
+  plt.colorbar()
+  plt.show()
+  """
   b1 = hdf.select('ImageData1')
   db1 = b1.get().astype('f8')
   edge_mask = db1==0
@@ -99,7 +104,7 @@ if __name__=="__main__":
   rfb3_match_full = np.zeros(reflectance_b1.shape)
   rfb3_match_full[~edge_mask]=rfb3_match
   rfb3_match_full[edge_mask]=np.nan
-
+  """
   """
   k = cKDTree(np.column_stack([pbands[3].ravel(),pbands[0].ravel(),pbands[1].ravel()]))
   dist, ind = k.query(np.column_stack([rfb1_match[~edge_mask],rfb2_match[~edge_mask],rfb3_match[~edge_mask]]),n_jobs=20, eps=0.4)
@@ -116,7 +121,7 @@ if __name__=="__main__":
   plt.imshow(np.dstack([rfb2_match,rfb1_match,aster_blue]))
   plt.colorbar()
   """
-  
+  """
   fig, axarr = plt.subplots(3,3, figsize=(30,20))
   img1 = axarr[0,0].imshow(pbands[3], vmin=0,vmax=1)
   axarr[0,0].set_title('Modis band 4')
@@ -207,3 +212,4 @@ if __name__=="__main__":
 
   fig.savefig('modis_aster_projection.png')
   plt.close()
+  """
