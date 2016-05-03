@@ -64,13 +64,13 @@ if __name__=="__main__":
   plt.imshow(color_img)
   plt.colorbar()
   plt.show()
-  """
+  
   b1 = hdf.select('ImageData1')
   db1 = b1.get().astype('f8')
   edge_mask = db1==0
   db1[edge_mask] = np.nan  
   reflectance_b1 = calc.RadToRefl ( calc.DnToRad ( db1, 1, utils.getGain(hdf,1) ), 1, earth_sun_dist, sza)
-  rfb1 = reflectance_b1 / np.cos(sza)
+
   
   b2 = hdf.select('ImageData2')
   db2 = b2.get().astype('f8')
@@ -84,6 +84,11 @@ if __name__=="__main__":
   reflectance_b3 = calc.RadToRefl ( calc.DnToRad ( db3N, 3, utils.getGain(hdf,'3N')), 3, earth_sun_dist, sza)
   rfb3 = reflectance_b3 / np.cos(sza)
   
+  #Fake Aster RGB
+  plt.figure()
+  plt.imshow(np.dstack((reflectance_b2,reflectance_b1,reflectance_b1)))
+
+  """
   #used in hist matchingto get rid of outliers
   eps = 3.5
   rfb1_match = calc.hist_match3(reflectance_b1[~edge_mask],pbands[3][~edge_mask],eps,nbins=200)
