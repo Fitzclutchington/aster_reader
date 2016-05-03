@@ -58,7 +58,7 @@ if __name__=="__main__":
   bands = mobj.reflectance([1,2,3,4])
 
   pbands = mobj.project(projstr,tx,ty,bands,nn=1)
-  color_img = np.dstack((pband[0],pbands[3],pbands[2]))
+  color_img = np.dstack((pbands[0],pbands[3],pbands[2]))
   
   plt.figure()
   plt.imshow(color_img)
