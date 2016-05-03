@@ -1,7 +1,9 @@
-*.tif
+*tif
 *.png
 *.hdf
 *.pdf
 *.mat
 *.pyc
-/modis
+/modis*
+*.m
+

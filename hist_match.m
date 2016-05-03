@@ -17,10 +17,10 @@ cdfQ=cumsum(hQ);
 c=0; kQ=1;
 while c<sum(hQ) & kQ<L-1
     kQ=min(find(cdfQ>c));
-        k=max(find(cdf<cdfQ(kQ)));
-        g(kQ)=bins(k+1);
-        kQ=kQ+1;
-        c=cdfQ(kQ);
+    k=max(find(cdf<cdfQ(kQ)));
+    g(kQ)=bins(k+1);
+    kQ=kQ+1;
+    c=cdfQ(kQ);
 end
 
 ind=find(isfinite(g)==1);

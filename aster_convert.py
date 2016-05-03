@@ -50,9 +50,9 @@ if __name__=="__main__":
   
   tx,ty = utm(geo_coords[:,:,1],geo_coords[:,:,0])
   
-  mhkm = 'modis/MOD02HKM.A2015158.2310.006.2015159075416.hdf'
-  m1km = 'modis/MOD021KM.A2015158.2310.006.2015159075416.hdf'
-  m03 = 'modis/MOD03.A2015158.2310.006.2015159052213.hdf'
+  mhkm = 'modis0622/MOD021KM.A2015173.2230.006.2015174183506.hdf'
+  m1km = 'modis0622/MOD02HKM.A2015173.2230.006.2015174183506.hdf'
+  m03 =  'modis0622/MOD03.A2015173.2230.006.2015174172932.hdf'
   mobj = MODIS(mhkm,m1km,m03)
 
   bands = mobj.reflectance([1,2,3,4])
@@ -79,21 +79,26 @@ if __name__=="__main__":
   reflectance_b3 = calc.RadToRefl ( calc.DnToRad ( db3N, 3, utils.getGain(hdf,'3N')), 3, earth_sun_dist, sza)
   rfb3 = reflectance_b3 / np.cos(sza)
   
-  rfb1_match = calc.hist_match3(reflectance_b1[~edge_mask],pbands[3][~edge_mask])
+  #used in hist matchingto get rid of outliers
+  eps = 3.5
+  rfb1_match = calc.hist_match3(reflectance_b1[~edge_mask],pbands[3][~edge_mask],eps,nbins=200)
   #rfb1_match[edge_mask] = np.nan
-  rfb2_match = calc.hist_match3(reflectance_b2[~edge_mask],pbands[0][~edge_mask])
+  rfb2_match = calc.hist_match3(reflectance_b2[~edge_mask],pbands[0][~edge_mask],eps,nbins=200)
   #rfb2_match[edge_mask] = np.nan
-  rfb3_match = calc.hist_match3(reflectance_b3[~edge_mask],pbands[1][~edge_mask])
+  rfb3_match = calc.hist_match3(reflectance_b3[~edge_mask],pbands[1][~edge_mask],eps,nbins=200)
   #rfb3_match[edge_mask] = np.nan
   
   rfb1_match_full = np.zeros(edge_mask.shape)
   rfb1_match_full[~edge_mask]=rfb1_match
+  rfb1_match_full[edge_mask]=np.nan
   
   rfb2_match_full = np.zeros(reflectance_b1.shape)
   rfb2_match_full[~edge_mask]=rfb2_match
+  rfb2_match_full[edge_mask]=np.nan
 
   rfb3_match_full = np.zeros(reflectance_b1.shape)
   rfb3_match_full[~edge_mask]=rfb3_match
+  rfb3_match_full[edge_mask]=np.nan
 
   """
   k = cKDTree(np.column_stack([pbands[3].ravel(),pbands[0].ravel(),pbands[1].ravel()]))
@@ -116,7 +121,7 @@ if __name__=="__main__":
   img1 = axarr[0,0].imshow(pbands[3], vmin=0,vmax=1)
   axarr[0,0].set_title('Modis band 4')
   div1 = make_axes_locatable(axarr[0,0])
-  cax1 = div1.append_axes("right", size="15%", pad=0.05)
+  cax1 = div1.append_axes("right", size="10%", pad=0.05)
   cbar1 = plt.colorbar(img1, cax=cax1)
   axarr[0,0].xaxis.set_visible(False)
   axarr[0,0].yaxis.set_visible(False)
@@ -126,7 +131,7 @@ if __name__=="__main__":
   img2 = axarr[1,0].imshow(rfb1_match_full, vmin=0,vmax=1)
   axarr[1,0].set_title('Aster band 1')
   div2 = make_axes_locatable(axarr[1,0])
-  cax2 = div2.append_axes("right", size="15%", pad=0.05)
+  cax2 = div2.append_axes("right", size="10%", pad=0.05)
   cbar2 = plt.colorbar(img2, cax=cax2)
   axarr[1,0].xaxis.set_visible(False)
   axarr[1,0].yaxis.set_visible(False)
@@ -139,14 +144,14 @@ if __name__=="__main__":
   axarr[2,0].plot(x2,y2,'-k',label="modis")
   axarr[2,0].plot(x3,y3,'--b',lw=3,label="match")
   axarr[2,0].set_title('Aster 1 Modis 4 Matched Histogram')
-  axarr[2,0].set_xlabel('Pixel value')
+  axarr[2,0].set_xlabel('Reflectance')
   axarr[2,0].set_ylabel('Cumulative %')
   axarr[2,0].legend(loc=5)
 
   img3 = axarr[0,1].imshow(pbands[0], vmin=0,vmax=1)
   axarr[0,1].set_title('Modis band 1')
   div3 = make_axes_locatable(axarr[0,1])
-  cax3 = div3.append_axes("right", size="15%", pad=0.05)
+  cax3 = div3.append_axes("right", size="10%", pad=0.05)
   cbar3 = plt.colorbar(img3, cax=cax3)
   axarr[0,1].xaxis.set_visible(False)
   axarr[0,1].yaxis.set_visible(False)
@@ -154,7 +159,7 @@ if __name__=="__main__":
   img4 = axarr[1,1].imshow(rfb2_match_full, vmin=0,vmax=1)
   axarr[1,1].set_title('Aster band 2')
   div4 = make_axes_locatable(axarr[1,1])
-  cax4 = div4.append_axes("right", size="15%", pad=0.05)
+  cax4 = div4.append_axes("right", size="10%", pad=0.05)
   cbar4 = plt.colorbar(img4, cax=cax4)
   axarr[1,1].xaxis.set_visible(False)
   axarr[1,1].yaxis.set_visible(False)
@@ -167,14 +172,14 @@ if __name__=="__main__":
   axarr[2,1].plot(x2,y2,'-k',label="modis")
   axarr[2,1].plot(x3,y3,'--b',lw=3,label="match")
   axarr[2,1].set_title('Aster 2 Modis 1 Matched Histogram')
-  axarr[2,1].set_xlabel('Pixel value')
+  axarr[2,1].set_xlabel('Reflectance')
   axarr[2,1].set_ylabel('Cumulative %')
   axarr[2,1].legend(loc=5)
 
   img5 = axarr[0,2].imshow(pbands[1], vmin=0,vmax=1)
   axarr[0,2].set_title('Modis band 2')
   div5 = make_axes_locatable(axarr[0,2])
-  cax5 = div5.append_axes("right", size="15%", pad=0.05)
+  cax5 = div5.append_axes("right", size="10%", pad=0.05)
   cbar5 = plt.colorbar(img5, cax=cax5)
   axarr[0,2].xaxis.set_visible(False)
   axarr[0,2].yaxis.set_visible(False)
@@ -183,7 +188,7 @@ if __name__=="__main__":
   img6 = axarr[1,2].imshow(rfb3_match_full, vmin=0,vmax=1)
   axarr[1,2].set_title('Aster band 3N')
   div6 = make_axes_locatable(axarr[1,2])
-  cax6 = div6.append_axes("right", size="15%", pad=0.05)
+  cax6 = div6.append_axes("right", size="10%", pad=0.05)
   cbar6 = plt.colorbar(img6, cax=cax6)
   axarr[1,2].xaxis.set_visible(False)
   axarr[1,2].yaxis.set_visible(False)
@@ -196,7 +201,7 @@ if __name__=="__main__":
   axarr[2,2].plot(x2,y2,'-k',label="modis")
   axarr[2,2].plot(x3,y3,'--b',lw=3,label="match")
   axarr[2,2].set_title('Aster 3 Modis 2 Matched Histogram')
-  axarr[2,2].set_xlabel('Pixel value')
+  axarr[2,2].set_xlabel('Reflectance')
   axarr[2,2].set_ylabel('Cumulative %')
   axarr[2,2].legend(loc=5)
 
