@@ -165,7 +165,7 @@ def hist_match3(source,target,eps,nbins=100):
 def desaturate_aster(aster,modis):
 
 
-  Q = np.column_stack(aster,modis)
+  Q = np.column_stack((aster,modis))
   ms = np.mean(Q,axis=0)
   d,v = np.linalg.eig(np.cov(Q.T))
   eigorder = d.argsort()
