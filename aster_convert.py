@@ -60,10 +60,10 @@ if __name__=="__main__":
   pbands = mobj.project(projstr,tx,ty,bands,nn=1)
   color_img = np.dstack((pbands[0],pbands[3],pbands[2]))
   
-  plt.figure()
-  plt.imshow(color_img)
-  plt.colorbar()
-  plt.show()
+  #plt.figure()
+  #plt.imshow(color_img)
+  #plt.colorbar()
+  #plt.show()
   
   b1 = hdf.select('ImageData1')
   db1 = b1.get().astype('f8')
