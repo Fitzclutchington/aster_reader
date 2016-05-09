@@ -167,10 +167,10 @@ def desaturate_aster(aster,modis):
 
   Q = np.column_stack((aster,modis))
   ms = np.mean(Q,axis=0)
-  d,v = np.linalg.eig(np.cov(Q))
+  d,v = np.linalg.eig(np.cov(Q.T))
   eigorder = d.argsort()
   print "eigorder = " + str(eigorder)
-  Pr= (Q-ms)*v[:,eigorder[-1]]*v[:,eigorder[-1]].T+ms
+  Pr= np.dot((Q-ms),v[:,eigorder[-1]])+ms
   return Pr[:,0]
 
 
