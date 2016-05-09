@@ -174,17 +174,38 @@ def desaturate_aster(aster,modis):
 """
 def getBlueAster(aster_match,modis_bands):
   aster = np.column_stack(aster_match)
-  modis = np.column_stack(modis_bands)
+  modis = np.column_stack(modis_bands[:-1])
   ms = np.mean(np.vstack((aster,modis)),axis=0)
-  Q = aster - ms
-  d,v = np.linalg.eig(np.cov(Q.T))
+  Mh = aster - ms
+  M = modis - ms
+  d,v = np.linalg.eig(np.cov(Mh.T))
   eigorder = d.argsort()
   aster_eig = v[:,eigorder[-1]]
-  aster_pr = np.dot(Q,v[:,eigorder[-1]])
-
-  Q1 = modis - ms
-  d,v = np.linalg.eig(np.cov(Q1.T))
+  
+  d,v = np.linalg.eig(np.cov(M.T))
   eigorder = d.argsort()
-  _eig = v[:,eigorder[-1]]
-  aster_pr = np.dot(Q,v[:,eigorder[-1]])
+  modis_eig = v[:,eigorder[-3:]]
+  modis_eig[:,-1] = aster_eig
+  CT = np.dot(M,modis_eig)
+  
+  Mhat = np.dot(CT,modis_eig.T) +ms
+
+  modis_test = np.zeros((rfb1_proj.shape[0],rfb1_proj.shape[1],3))
+  modis_test[edge_mask,:] = np.nan
+  modis_test[~edge_mask,:] = Mhat
+
+  A = np.column_stack((np.ones(Mhat.shape[0]),Mhat))
+  b = modis_bands[3]
+  x = np.linalg.lstsq(A, b)[0]
+  
+  aster_blue = np.dot(np.column_stack((np.ones(aster.shape[0]),reflectance_b1[~edge_mask],reflectance_b2[~edge_mask],reflectance_b3[~edge_mask])),x)
+
+  aster_test = np.zeros(modis_test.shape)
+  aster_test[~edge_mask,:] = np.column_stack((reflectance_b2[~edge_mask],reflectance_b1[~edge_mask],aster_blue))
+  aster_test[edge_mask,:] = np.nan
+  plt.figure();plt.imshow(aster_test);plt.colorbar()
+  plt.figure();plt.imshow(color_img);plt.colorbar()
+  plt.show()
+
+  
 """

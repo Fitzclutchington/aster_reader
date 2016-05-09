@@ -50,9 +50,9 @@ if __name__=="__main__":
   
   tx,ty = utm(geo_coords[:,:,1],geo_coords[:,:,0])
   
-  mhkm = 'modis0622/MOD02HKM.A2015173.2230.006.2015174183506.hdf'
-  m1km = 'modis0622/MOD021KM.A2015173.2230.006.2015174183506.hdf'
-  m03 =  'modis0622/MOD03.A2015173.2230.006.2015174172932.hdf'
+  mhkm = 'modis/MOD02HKM.A2015158.2310.006.2015159075416.hdf'
+  m1km = 'modis/MOD021KM.A2015158.2310.006.2015159075416.hdf'
+  m03 =  'modis/MOD03.A2015158.2310.006.2015159052213.hdf'
   mobj = MODIS(mhkm,m1km,m03)
   
   bands = mobj.reflectance([1,2,3,4])
@@ -213,5 +213,5 @@ if __name__=="__main__":
   plt.close()
   """
   aster_bands = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
-  modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask]]
+  modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask], pbands[2][~edge_mask]]
   #aster_blue = calc.getBlueAster(aster_bands,modis_bands)
