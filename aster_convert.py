@@ -155,12 +155,14 @@ if __name__=="__main__":
   axarr[1,0].yaxis.set_visible(False)
   
   x1, y1 = calc.ecdf(rfb1_proj.ravel())
+  x4, y4 = calc.ecdf(reflectance_b1.ravel())
   x2, y2 = calc.ecdf(pbands[3].ravel())
   x3, y3 = calc.ecdf(rfb1_match.ravel())
 
   axarr[2,0].plot(x1,y1,'-r',label="aster")
   axarr[2,0].plot(x2,y2,'-k',label="modis")
   axarr[2,0].plot(x3,y3,'--b',lw=3,label="match")
+  axarr[2,0].plot(x4,y4,'g', lw=5, label="sat aster")
   axarr[2,0].set_title('Aster 1 Modis 4 Matched Histogram')
   axarr[2,0].set_xlabel('Reflectance')
   axarr[2,0].set_ylabel('Cumulative %')
