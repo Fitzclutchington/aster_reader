@@ -8,7 +8,7 @@ import sys
 import gridding as grid
 from products import MODIS
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from scipy.spatial import cKDTree
+from pykdtree.kdtree import KDTree
 from scipy.io import savemat
 import calculations as calc
 import utils
@@ -118,22 +118,23 @@ if __name__=="__main__":
   rfb3_match_full[~edge_mask]=rfb3_match
   rfb3_match_full[edge_mask]=np.nan
   
-  """
-  k = cKDTree(np.column_stack([pbands[3].ravel(),pbands[0].ravel(),pbands[1].ravel()]))
-  dist, ind = k.query(np.column_stack([rfb1_match[~edge_mask],rfb2_match[~edge_mask],rfb3_match[~edge_mask]]),n_jobs=20, eps=0.4)
-  print "cKDTree query completed"
+  print "starting KDTree"
+  k = KDTree(np.column_stack([pbands[3].ravel(),pbands[0].ravel(),pbands[1].ravel()]))
+  print "kdtree built"
+  dist, ind = k.query(np.column_stack([rfb1_match,rfb2_match,rfb3_match]))
+  print "KDTree query completed"
 
   #nearest neighbor
   nnvals = pbands[2][ind]
   
-  aster_blue = np.zeros(rfb1_match.shape)
+  aster_blue = np.zeros(reflectance_b1.shape)
   aster_blue[~edge_mask] = nnvals
   aster_blue[edge_mask] = np.nan
 
   plt.figure()
-  plt.imshow(np.dstack([rfb2_match,rfb1_match,aster_blue]))
+  plt.imshow(np.dstack([rfb2_match_full,rfb1_match_full,aster_blue]))
   plt.colorbar()
-  """
+  
   
   fig, axarr = plt.subplots(3,3, figsize=(30,20))
   img1 = axarr[0,0].imshow(pbands[3], vmin=0,vmax=1)
@@ -162,7 +163,7 @@ if __name__=="__main__":
   axarr[2,0].plot(x1,y1,'-r',label="aster")
   axarr[2,0].plot(x2,y2,'-k',label="modis")
   axarr[2,0].plot(x3,y3,'--b',lw=3,label="match")
-  axarr[2,0].plot(x4,y4,'g', lw=5, label="sat aster")
+  axarr[2,0].plot(x4,y4,'g', lw=3, label="sat aster")
   axarr[2,0].set_title('Aster 1 Modis 4 Matched Histogram')
   axarr[2,0].set_xlabel('Reflectance')
   axarr[2,0].set_ylabel('Cumulative %')
