@@ -125,7 +125,7 @@ if __name__=="__main__":
   print "KDTree query completed"
 
   #nearest neighbor
-  nnvals = pbands[2][ind]
+  nnvals = np.ravel(pbands[2])[ind]
   
   aster_blue = np.zeros(reflectance_b1.shape)
   aster_blue[~edge_mask] = nnvals
