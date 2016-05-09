@@ -154,7 +154,7 @@ if __name__=="__main__":
   axarr[1,0].xaxis.set_visible(False)
   axarr[1,0].yaxis.set_visible(False)
   
-  x1, y1 = calc.ecdf(reflectance_b1.ravel())
+  x1, y1 = calc.ecdf(rfb1_proj.ravel())
   x2, y2 = calc.ecdf(pbands[3].ravel())
   x3, y3 = calc.ecdf(rfb1_match.ravel())
 
@@ -182,7 +182,7 @@ if __name__=="__main__":
   axarr[1,1].xaxis.set_visible(False)
   axarr[1,1].yaxis.set_visible(False)
   
-  x1, y1 = calc.ecdf(reflectance_b2.ravel())
+  x1, y1 = calc.ecdf(rfb2_proj.ravel())
   x2, y2 = calc.ecdf(pbands[0].ravel())
   x3, y3 = calc.ecdf(rfb2_match.ravel())
 
