@@ -133,7 +133,7 @@ if __name__=="__main__":
 
   plt.figure()
   plt.imshow(np.dstack([rfb2_match_full,rfb1_match_full,aster_blue]))
-  plt.colorbar()
+  plt.savefig('aster_blue.png')
   
   
   fig, axarr = plt.subplots(3,3, figsize=(30,20))
