@@ -198,14 +198,16 @@ def getBlueAster(aster_match,modis_bands):
   b = modis_bands[3]
   x = np.linalg.lstsq(A, b)[0]
   
-  aster_blue = np.dot(np.column_stack((np.ones(aster.shape[0]),reflectance_b1[~edge_mask],reflectance_b2[~edge_mask],reflectance_b3[~edge_mask])),x)
+  aster_blue = np.dot(np.column_stack((np.ones(aster.shape[0]),aster)),x)
 
   aster_test = np.zeros(modis_test.shape)
-  aster_test[~edge_mask,:] = np.column_stack((reflectance_b2[~edge_mask],reflectance_b1[~edge_mask],aster_blue))
+  aster_test[~edge_mask,:] = np.column_stack((aster_match[1],aster_match[0],aster_blue))
   aster_test[edge_mask,:] = np.nan
+  aster_test[aster_test<0] = 0
   plt.figure();plt.imshow(aster_test);plt.colorbar()
   plt.figure();plt.imshow(color_img);plt.colorbar()
   plt.show()
+  
 
   
 """
