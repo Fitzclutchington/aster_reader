@@ -164,7 +164,6 @@ def hist_match3(source,target,eps,nbins=100):
 
 def desaturate_aster(aster,modis):
 
-
   Q = np.column_stack((aster,modis))
   ms = np.mean(Q,axis=0)
   d,v = np.linalg.eig(np.cov(Q.T))
@@ -172,4 +171,20 @@ def desaturate_aster(aster,modis):
   Pr = np.dot(np.dot((Q-ms),v[:,eigorder[-1]])[:,np.newaxis],v[:,eigorder[-1]].reshape((1,2))) + ms
   return Pr[:,0]
 
+"""
+def getBlueAster(aster_match,modis_bands):
+  aster = np.column_stack(aster_match)
+  modis = np.column_stack(modis_bands)
+  ms = np.mean(np.vstack((aster,modis)),axis=0)
+  Q = aster - ms
+  d,v = np.linalg.eig(np.cov(Q.T))
+  eigorder = d.argsort()
+  aster_eig = v[:,eigorder[-1]]
+  aster_pr = np.dot(Q,v[:,eigorder[-1]])
 
+  Q1 = modis - ms
+  d,v = np.linalg.eig(np.cov(Q1.T))
+  eigorder = d.argsort()
+  _eig = v[:,eigorder[-1]]
+  aster_pr = np.dot(Q,v[:,eigorder[-1]])
+"""

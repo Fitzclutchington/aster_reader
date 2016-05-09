@@ -118,24 +118,7 @@ if __name__=="__main__":
   rfb3_match_full[~edge_mask]=rfb3_match
   rfb3_match_full[edge_mask]=np.nan
   
-  print "starting KDTree"
-  k = KDTree(np.column_stack([pbands[3].ravel(),pbands[0].ravel(),pbands[1].ravel()]))
-  print "kdtree built"
-  dist, ind = k.query(np.column_stack([rfb1_match,rfb2_match,rfb3_match]))
-  print "KDTree query completed"
-
-  #nearest neighbor
-  nnvals = np.ravel(pbands[2])[ind]
-  
-  aster_blue = np.zeros(reflectance_b1.shape)
-  aster_blue[~edge_mask] = nnvals
-  aster_blue[edge_mask] = np.nan
-
-  plt.figure()
-  plt.imshow(np.dstack([rfb2_match_full,rfb1_match_full,aster_blue]))
-  plt.savefig('aster_blue.png')
-  
-  
+  """
   fig, axarr = plt.subplots(3,3, figsize=(30,20))
   img1 = axarr[0,0].imshow(pbands[3], vmin=0,vmax=1)
   axarr[0,0].set_title('Modis band 4')
@@ -228,4 +211,7 @@ if __name__=="__main__":
 
   fig.savefig('modis_aster_projection.png')
   plt.close()
-  
+  """
+  aster_bands = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
+  modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask]]
+  #aster_blue = calc.getBlueAster(aster_bands,modis_bands)
