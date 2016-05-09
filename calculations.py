@@ -161,3 +161,15 @@ def hist_match3(source,target,eps,nbins=100):
     B = np.interp(D, x[:-1], y)
     
     return B.reshape(D_shape)
+
+def desaturate_aster(aster,modis):
+
+
+  Q = np.column_stack(aster,modis)
+  ms = np.mean(Q,axis=0)
+  d,v = np.linalg.eig(np.cov(Q.T))
+  eigorder = d.argsort()
+  Pr= (Q-ms)*v[:,eigorder[-1]]*v[:,eigorder[-1]].T+ms
+  return Pr[:,0]
+
+

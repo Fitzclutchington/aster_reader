@@ -85,15 +85,23 @@ if __name__=="__main__":
   rfb3 = reflectance_b3 / np.cos(sza)
   
   #Fake Aster RGB
-  plt.figure()
-  plt.imshow(np.dstack((reflectance_b2,reflectance_b1,reflectance_b1)))
+  #plt.figure()
+  #plt.imshow(np.dstack((reflectance_b2,reflectance_b1,reflectance_b1)))
+  
+  rfb1_proj = np.zeros(reflectance_b1.shape)
+  rfb1_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b1[~edge_mask],pbands[3][~edge_mask])
+  rfb1_proj[edge_mask] = np.nan
 
-  """
+  rfb2_proj = np.zeros(reflectance_b1.shape)
+  rfb2_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b2[~edge_mask],pbands[0][~edge_mask])
+  rfb2_proj[edge_mask] = np.nan
+
+
   #used in hist matchingto get rid of outliers
   eps = 3.5
-  rfb1_match = calc.hist_match3(reflectance_b1[~edge_mask],pbands[3][~edge_mask],eps,nbins=200)
+  rfb1_match = calc.hist_match3(rfb1_proj[~edge_mask],pbands[3][~edge_mask],eps,nbins=200)
   #rfb1_match[edge_mask] = np.nan
-  rfb2_match = calc.hist_match3(reflectance_b2[~edge_mask],pbands[0][~edge_mask],eps,nbins=200)
+  rfb2_match = calc.hist_match3(rfb2_proj[~edge_mask],pbands[0][~edge_mask],eps,nbins=200)
   #rfb2_match[edge_mask] = np.nan
   rfb3_match = calc.hist_match3(reflectance_b3[~edge_mask],pbands[1][~edge_mask],eps,nbins=200)
   #rfb3_match[edge_mask] = np.nan
@@ -109,7 +117,7 @@ if __name__=="__main__":
   rfb3_match_full = np.zeros(reflectance_b1.shape)
   rfb3_match_full[~edge_mask]=rfb3_match
   rfb3_match_full[edge_mask]=np.nan
-  """
+  
   """
   k = cKDTree(np.column_stack([pbands[3].ravel(),pbands[0].ravel(),pbands[1].ravel()]))
   dist, ind = k.query(np.column_stack([rfb1_match[~edge_mask],rfb2_match[~edge_mask],rfb3_match[~edge_mask]]),n_jobs=20, eps=0.4)
@@ -126,7 +134,7 @@ if __name__=="__main__":
   plt.imshow(np.dstack([rfb2_match,rfb1_match,aster_blue]))
   plt.colorbar()
   """
-  """
+  
   fig, axarr = plt.subplots(3,3, figsize=(30,20))
   img1 = axarr[0,0].imshow(pbands[3], vmin=0,vmax=1)
   axarr[0,0].set_title('Modis band 4')
@@ -217,4 +225,4 @@ if __name__=="__main__":
 
   fig.savefig('modis_aster_projection.png')
   plt.close()
-  """
+  
