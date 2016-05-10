@@ -72,7 +72,7 @@ if __name__=="__main__":
   osrref.ImportFromWkt(projection)
   projstr = osrref.ExportToProj4()
   utm = Proj(projstr)
-  """
+
   tx,ty = utm(geo_coords[:,:,1],geo_coords[:,:,0])
   
   mobj = MODIS(mhkm,m1km,m03)
@@ -217,5 +217,5 @@ if __name__=="__main__":
   aster_test = calc.getBlueAster(aster_match,modis_bands, edge_mask, reflectance_b1.shape)
   plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("images/aster_rgb_{}.png".format(file_end));plt.close()
   plt.figure();plt.imshow(color_img);plt.colorbar();plt.savefig("images/modis_rgb_{}.png".format(file_end));plt.close()
-  """
+
   
