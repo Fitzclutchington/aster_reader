@@ -27,7 +27,7 @@ if __name__=="__main__":
   file_end = str(config['file_end'])
 
   hdf = utils.openHDF(aster_file)
-  julian_date = utils.filenameToJulian(filename)
+  julian_date = utils.filenameToJulian(aster_file)
   
   earth_sun_dist = utils.sunDistance(julian_date)
   sza = utils.getSZA(hdf)
@@ -49,7 +49,7 @@ if __name__=="__main__":
   
   geo_coords[:,:,0] = grid.toGeocentric(geo_coords[:,:,0])
   
-  ds = gdal.Open('HDF4_EOS:EOS_SWATH:"{}":VNIR_Swath:ImageData1'.format(filename))
+  ds = gdal.Open('HDF4_EOS:EOS_SWATH:"{}":VNIR_Swath:ImageData1'.format(aster_file))
   tmp_ds=gdal.AutoCreateWarpedVRT(ds)
   projection=tmp_ds.GetProjection()
   osrref = osr.SpatialReference()

@@ -6,4 +6,4 @@
 *.pyc
 /modis*
 *.m
-
+*.json
