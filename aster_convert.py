@@ -21,9 +21,9 @@ if __name__=="__main__":
     config = json.load(f)
 
   aster_file = config['aster']
-  mhkm = config['mhkm']'modis/MOD02HKM.A2015158.2310.006.2015159075416.hdf'
-  m1km = config['m1km']'modis/MOD021KM.A2015158.2310.006.2015159075416.hdf'
-  m03 =  config['m03']'modis/MOD03.A2015158.2310.006.2015159052213.hdf'
+  mhkm = config['mhkm']
+  m1km = config['m1km']
+  m03 =  config['m03']
   file_end = config['file_end']
 
   hdf = utils.openHDF(aster_file)
