@@ -208,8 +208,10 @@ if __name__=="__main__":
 
   fig.savefig('modis_aster_0607.png')
   plt.close()
-  
   aster_match = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
   modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask], pbands[2][~edge_mask]]
-  aster_blue = calc.getBlueAster(aster_bands,modis_bands,reflectance_b1.shape,edge_mask)
+  aster_test = calc.getBlueAster(aster_match,modis_bands, edge_mask, reflectance_b1.shape)
+  plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("aster_rgb_0607.png");plt.close()
+  plt.figure();plt.imshow(color_img);plt.colorbar();plt.savefig("modis_rgb_0607.png");plt.close()
+
   
