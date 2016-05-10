@@ -12,12 +12,21 @@ from pykdtree.kdtree import KDTree
 from scipy.io import savemat
 import calculations as calc
 import utils
+import json
 
 if __name__=="__main__":
    
   filename = sys.argv[1] 
+  with open(filename) as f:
+    config = json.load(f)
 
-  hdf = utils.openHDF(filename)
+  aster_file = config['aster']
+  mhkm = config['mhkm']'modis/MOD02HKM.A2015158.2310.006.2015159075416.hdf'
+  m1km = config['m1km']'modis/MOD021KM.A2015158.2310.006.2015159075416.hdf'
+  m03 =  config['m03']'modis/MOD03.A2015158.2310.006.2015159052213.hdf'
+  file_end = config['file_end']
+
+  hdf = utils.openHDF(aster_file)
   julian_date = utils.filenameToJulian(filename)
   
   earth_sun_dist = utils.sunDistance(julian_date)
@@ -50,9 +59,6 @@ if __name__=="__main__":
   
   tx,ty = utm(geo_coords[:,:,1],geo_coords[:,:,0])
   
-  mhkm = 'modis/MOD02HKM.A2015158.2310.006.2015159075416.hdf'
-  m1km = 'modis/MOD021KM.A2015158.2310.006.2015159075416.hdf'
-  m03 =  'modis/MOD03.A2015158.2310.006.2015159052213.hdf'
   mobj = MODIS(mhkm,m1km,m03)
   
   bands = mobj.reflectance([1,2,3,4])
@@ -206,12 +212,12 @@ if __name__=="__main__":
   axarr[2,2].set_ylabel('Cumulative %')
   axarr[2,2].legend(loc=5)
 
-  fig.savefig('modis_aster_0607.png')
+  fig.savefig('modis_aster_{}.png'.format(file_end))
   plt.close()
   aster_match = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
   modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask], pbands[2][~edge_mask]]
   aster_test = calc.getBlueAster(aster_match,modis_bands, edge_mask, reflectance_b1.shape)
-  plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("aster_rgb_0607.png");plt.close()
-  plt.figure();plt.imshow(color_img);plt.colorbar();plt.savefig("modis_rgb_0607.png");plt.close()
+  plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("aster_rgb_{}.png".format(file_end));plt.close()
+  plt.figure();plt.imshow(color_img);plt.colorbar();plt.savefig("modis_rgb_{}.png".format(file_end));plt.close()
 
   
