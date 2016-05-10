@@ -82,7 +82,7 @@ if __name__=="__main__":
   db3N[edge_mask] = np.nan
   reflectance_b3 = calc.RadToRefl ( calc.DnToRad ( db3N, 3, utils.getGain(hdf,'3N')), 3, earth_sun_dist, sza)
   
-  """
+  
   rfb1_proj = np.zeros(reflectance_b1.shape)
   rfb1_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b1[~edge_mask],pbands[3][~edge_mask])
   rfb1_proj[edge_mask] = np.nan
@@ -206,10 +206,11 @@ if __name__=="__main__":
   axarr[2,2].set_ylabel('Cumulative %')
   axarr[2,2].legend(loc=5)
 
-  fig.savefig('modis_aster_0607.png')
-  plt.close()
+  plt.show()
+  #fig.savefig('modis_aster_0607.png')
+  #plt.close()
   
   aster_match = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
   modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask], pbands[2][~edge_mask]]
   #aster_blue = calc.getBlueAster(aster_bands,modis_bands)
-  """
+  

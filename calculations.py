@@ -117,13 +117,13 @@ def pca(Q, ncomp):
 
 def hist_match3(source,target,eps,nbins=100):
     D1 = target.ravel()
-    D1_mean = np.mean(D1)
-    D1_std = np.std(D1)
-    out1_pos = (D1_mean+eps)*D1_std
-    out1_neg = (D1_mean-eps)*D1_std
-    m1 = D1 > out1_pos
-    m2 = D1 < out1_neg
-    out1_mask = np.logical_or(m1,m2)
+    #D1_mean = np.mean(D1)
+    #D1_std = np.std(D1)
+    #out1_pos = (D1_mean+eps)*D1_std
+    #out1_neg = (D1_mean-eps)*D1_std
+    #m1 = D1 > out1_pos
+    #m2 = D1 < out1_neg
+    #out1_mask = np.logical_or(m1,m2)
     m = D1.min()
     M = D1.max()
     H = np.zeros((2, nbins))
@@ -132,18 +132,18 @@ def hist_match3(source,target,eps,nbins=100):
     D = source.copy()
     D_shape = D.shape
     D = D.ravel()
-    D_mean = np.mean(D)
-    D_std = np.std(D)
-    out2_pos = (D_mean+eps)*D_std
-    out2_neg = (D_mean-eps)*D_std
-    m1 = D > out2_pos
-    m2 = D < out2_neg
-    out2_mask = np.logical_or(m1,m2)
+    #D_mean = np.mean(D)
+    #D_std = np.std(D)
+    #out2_pos = (D_mean+eps)*D_std
+    #out2_neg = (D_mean-eps)*D_std
+    #m1 = D > out2_pos
+    #m2 = D < out2_neg
+    #out2_mask = np.logical_or(m1,m2)
 
     x = np.linspace(min(m, np.min(D)), max(M, np.max(D)), nbins+1)
-    WH, _ = np.histogram(D1[out1_mask], bins=x, normed=True)
+    WH, _ = np.histogram(D1, bins=x, normed=True)
     H[0,:] = np.cumsum(WH/float(len(D1)))
-    WH, _ = np.histogram(D[out2_mask], bins=x, normed=True)
+    WH, _ = np.histogram(D, bins=x, normed=True)
     H[1,:] = np.cumsum(WH/float(len(D)))
     y = np.zeros(nbins)
     for i in xrange(nbins):
@@ -169,7 +169,7 @@ def desaturate_aster(aster,modis):
   d,v = np.linalg.eig(np.cov(Q.T))
   eigorder = d.argsort()
   Pr = np.dot(np.dot((Q-ms),v[:,eigorder[-1]])[:,np.newaxis],v[:,eigorder[-1]].reshape((1,2))) + ms
-  #Pr = np.dot(np.dot((Q-ms).T,v[:,eigorder[-1]]).reshape((Q.shape[0],1),v[:,eigorder[-1]].reshape((1,2))) + ms
+  #Pr = np.dot(np.dot((Q-ms),v[:,eigorder[-1]]).reshape((Q.shape[0],1)),v[:,eigorder[-1]].reshape((1,2))) + ms
   return Pr[:,0]
 
 """
