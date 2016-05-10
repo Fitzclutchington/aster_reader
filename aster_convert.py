@@ -220,8 +220,8 @@ if __name__=="__main__":
   
   aster_match = [rfb1_match1,rfb2_match1,rfb3_match1]
   ####
-  aster = np.column_stack(aster_match3)
-  aster1 = np.column_stack(aster_match)
+  aster = np.column_stack(aster_match)
+  #aster1 = np.column_stack(aster_match)
   modis = np.column_stack(modis_bands[:-1])
   ms = np.mean(np.vstack((aster,modis)),axis=0)
   Mh = aster - ms
@@ -238,6 +238,7 @@ if __name__=="__main__":
   
   Mhat = np.dot(CT,modis_eig.T) +ms
 
+  shape = reflectance_b1.shape
   modis_test = np.zeros((shape[0],shape[1],3))
   modis_test[edge_mask,:] = np.nan
   modis_test[~edge_mask,:] = Mhat
@@ -246,15 +247,16 @@ if __name__=="__main__":
   b = modis_bands[3]
   x = np.linalg.lstsq(A, b)[0]
   
-  aster_blue = np.dot(np.column_stack((np.ones(aster.shape[0]),aster1)),x)
+  aster_blue = np.dot(np.column_stack((np.ones(aster.shape[0]),aster)),x)
 
   aster_test = np.zeros(modis_test.shape)
   aster_test[~edge_mask,:] = np.column_stack((aster_match[1],aster_match[0],aster_blue))
   aster_test[edge_mask,:] = np.nan
   aster_test[aster_test<0] = 0
+  aster_test[aster_test>1] = 1
   ###
 
-  plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("aster_rgb_0607.png");plt.close()
+  plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("aster_rgb_0607_match1.png");plt.close()
   plt.figure();plt.imshow(color_img);plt.colorbar();plt.savefig("modis_rgb_0607.png");plt.close()
 
   
