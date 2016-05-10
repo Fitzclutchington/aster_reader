@@ -384,7 +384,7 @@ def parsemeta(metadataloc):
             metadata = _parsemetastream(filehandle)
     except IOError:
         # maybe the argument is a string. Converting to a file-like object
-        logging.info("It's not a file, trying to open it as a string.")
+        #logging.info("It's not a file, trying to open it as a string.")
         try:
             inpstream = StringIO(metadatastr)
         except:

@@ -172,8 +172,8 @@ def desaturate_aster(aster,modis):
   #Pr = np.dot(np.dot((Q-ms),v[:,eigorder[-1]]).reshape((Q.shape[0],1)),v[:,eigorder[-1]].reshape((1,2))) + ms
   return Pr[:,0]
 
-"""
-def getBlueAster(aster_match,modis_bands):
+
+def getBlueAster(aster_match,modis_bands,edge_mask,shape):
   aster = np.column_stack(aster_match)
   modis = np.column_stack(modis_bands[:-1])
   ms = np.mean(np.vstack((aster,modis)),axis=0)
@@ -191,7 +191,7 @@ def getBlueAster(aster_match,modis_bands):
   
   Mhat = np.dot(CT,modis_eig.T) +ms
 
-  modis_test = np.zeros((rfb1_proj.shape[0],rfb1_proj.shape[1],3))
+  modis_test = np.zeros((shape[0],shape[1],3))
   modis_test[edge_mask,:] = np.nan
   modis_test[~edge_mask,:] = Mhat
 
@@ -205,10 +205,9 @@ def getBlueAster(aster_match,modis_bands):
   aster_test[~edge_mask,:] = np.column_stack((aster_match[1],aster_match[0],aster_blue))
   aster_test[edge_mask,:] = np.nan
   aster_test[aster_test<0] = 0
-  plt.figure();plt.imshow(aster_test);plt.colorbar()
-  plt.figure();plt.imshow(color_img);plt.colorbar()
-  plt.show()
+  plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("aster_rgb_0607.png")
+  plt.figure();plt.imshow(color_img);plt.colorbar();plt.savefig("modis_rgb_0607.png")
+  
   
 
   
-"""

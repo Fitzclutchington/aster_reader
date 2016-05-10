@@ -206,11 +206,10 @@ if __name__=="__main__":
   axarr[2,2].set_ylabel('Cumulative %')
   axarr[2,2].legend(loc=5)
 
-  plt.show()
-  #fig.savefig('modis_aster_0607.png')
-  #plt.close()
+  fig.savefig('modis_aster_0607.png')
+  plt.close()
   
   aster_match = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
   modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask], pbands[2][~edge_mask]]
-  #aster_blue = calc.getBlueAster(aster_bands,modis_bands)
+  aster_blue = calc.getBlueAster(aster_bands,modis_bands,reflectance_b1.shape,edge_mask)
   

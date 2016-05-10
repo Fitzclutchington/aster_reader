@@ -40,7 +40,6 @@ def getGain(hdf,band):
   gain_info = meta['GAININFORMATION']['GAIN']
   gain_info = [g.split(",") for g in gain_info]
   gain_info = [g[1].strip().strip(")").strip('"') for g in gain_info]
-  print gain_info
   if band < 3:
     gain = gain_info[band-1]
   elif band == '3N':
