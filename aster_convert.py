@@ -212,12 +212,12 @@ if __name__=="__main__":
   axarr[2,2].set_ylabel('Cumulative %')
   axarr[2,2].legend(loc=5)
 
-  fig.savefig('modis_aster_{}.png'.format(file_end))
+  fig.savefig('images/modis_aster_{}.png'.format(file_end))
   plt.close()
   aster_match = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
   modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask], pbands[2][~edge_mask]]
   aster_test = calc.getBlueAster(aster_match,modis_bands, edge_mask, reflectance_b1.shape)
-  plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("aster_rgb_{}.png".format(file_end));plt.close()
-  plt.figure();plt.imshow(color_img);plt.colorbar();plt.savefig("modis_rgb_{}.png".format(file_end));plt.close()
+  plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("images/aster_rgb_{}.png".format(file_end));plt.close()
+  plt.figure();plt.imshow(color_img);plt.colorbar();plt.savefig("images/modis_rgb_{}.png".format(file_end));plt.close()
 
   
