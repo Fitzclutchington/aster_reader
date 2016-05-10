@@ -50,9 +50,9 @@ if __name__=="__main__":
   
   tx,ty = utm(geo_coords[:,:,1],geo_coords[:,:,0])
   
-  mhkm = 'modis0622/MOD02HKM.A2015173.2230.006.2015174183506.hdf'
-  m1km = 'modis0622/MOD021KM.A2015173.2230.006.2015174183506.hdf'
-  m03 =  'modis0622/MOD03.A2015173.2230.006.2015174172932.hdf'
+  mhkm = 'modis/MOD02HKM.A2015158.2310.006.2015159075416.hdf'
+  m1km = 'modis/MOD021KM.A2015158.2310.006.2015159075416.hdf'
+  m03 =  'modis/MOD03.A2015158.2310.006.2015159052213.hdf'
   mobj = MODIS(mhkm,m1km,m03)
   
   bands = mobj.reflectance([1,2,3,4])
@@ -76,18 +76,13 @@ if __name__=="__main__":
   db2 = b2.get().astype('f8')
   db2[edge_mask] = np.nan
   reflectance_b2 = calc.RadToRefl ( calc.DnToRad ( db2, 2, utils.getGain(hdf,2)), 2, earth_sun_dist, sza)
-  rfb2 = reflectance_b2 / np.cos(sza)
 
   b3N = hdf.select('ImageData3N')
   db3N = b3N.get().astype('f8') 
   db3N[edge_mask] = np.nan
   reflectance_b3 = calc.RadToRefl ( calc.DnToRad ( db3N, 3, utils.getGain(hdf,'3N')), 3, earth_sun_dist, sza)
-  rfb3 = reflectance_b3 / np.cos(sza)
   
-  #Fake Aster RGB
-  #plt.figure()
-  #plt.imshow(np.dstack((reflectance_b2,reflectance_b1,reflectance_b1)))
-  
+  """
   rfb1_proj = np.zeros(reflectance_b1.shape)
   rfb1_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b1[~edge_mask],pbands[3][~edge_mask])
   rfb1_proj[edge_mask] = np.nan
@@ -146,7 +141,7 @@ if __name__=="__main__":
   axarr[2,0].plot(x1,y1,'-r',label="aster")
   axarr[2,0].plot(x2,y2,'-k',label="modis")
   axarr[2,0].plot(x3,y3,'--b',lw=3,label="match")
-  axarr[2,0].plot(x4,y4,'g', lw=1, label="sat aster")
+  axarr[2,0].plot(x4,y4,'g', label="sat aster")
   axarr[2,0].set_title('Aster 1 Modis 4 Matched Histogram')
   axarr[2,0].set_xlabel('Reflectance')
   axarr[2,0].set_ylabel('Cumulative %')
@@ -176,7 +171,7 @@ if __name__=="__main__":
   axarr[2,1].plot(x1,y1,'-r',label="aster")
   axarr[2,1].plot(x2,y2,'-k',label="modis")
   axarr[2,1].plot(x3,y3,'--b',lw=3,label="match")
-  axarr[2,1].plot(x4,y4,'g', lw=1, label="sat aster")
+  axarr[2,1].plot(x4,y4,'g', label="sat aster")
   axarr[2,1].set_title('Aster 2 Modis 1 Matched Histogram')
   axarr[2,1].set_xlabel('Reflectance')
   axarr[2,1].set_ylabel('Cumulative %')
@@ -211,9 +206,10 @@ if __name__=="__main__":
   axarr[2,2].set_ylabel('Cumulative %')
   axarr[2,2].legend(loc=5)
 
-  fig.savefig('modis_aster_0622.png')
+  fig.savefig('modis_aster_0607.png')
   plt.close()
   
   aster_match = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
   modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask], pbands[2][~edge_mask]]
   #aster_blue = calc.getBlueAster(aster_bands,modis_bands)
+  """
