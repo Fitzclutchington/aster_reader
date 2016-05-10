@@ -208,55 +208,10 @@ if __name__=="__main__":
 
   fig.savefig('modis_aster_0607.png')
   plt.close()
-  aster_match3 = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
+  aster_match = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
   modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask], pbands[2][~edge_mask]]
-  
-  rfb1_match1 = calc.hist_match(reflectance_b1[~edge_mask],pbands[3][~edge_mask])
-  #rfb1_match[edge_mask] = np.nan
-  rfb2_match1 = calc.hist_match(reflectance_b2[~edge_mask],pbands[0][~edge_mask])
-  #rfb2_match[edge_mask] = np.nan
-  rfb3_match1 = calc.hist_match(reflectance_b3[~edge_mask],pbands[1][~edge_mask])
-  #rfb3_match[edge_mask] = np.nan
-  
-  aster_match = [rfb1_match1,rfb2_match1,rfb3_match1]
-  ####
-  aster = np.column_stack(aster_match)
-  #aster1 = np.column_stack(aster_match)
-  modis = np.column_stack(modis_bands[:-1])
-  ms = np.mean(np.vstack((aster,modis)),axis=0)
-  Mh = aster - ms
-  M = modis - ms
-  d,v = np.linalg.eig(np.cov(Mh.T))
-  eigorder = d.argsort()
-  aster_eig = v[:,eigorder[-1]]
-  
-  d,v = np.linalg.eig(np.cov(M.T))
-  eigorder = d.argsort()
-  modis_eig = v[:,eigorder[-3:]]
-  modis_eig[:,-1] = aster_eig
-  CT = np.dot(M,modis_eig)
-  
-  Mhat = np.dot(CT,modis_eig.T) +ms
-
-  shape = reflectance_b1.shape
-  modis_test = np.zeros((shape[0],shape[1],3))
-  modis_test[edge_mask,:] = np.nan
-  modis_test[~edge_mask,:] = Mhat
-
-  A = np.column_stack((np.ones(Mhat.shape[0]),Mhat))
-  b = modis_bands[3]
-  x = np.linalg.lstsq(A, b)[0]
-  
-  aster_blue = np.dot(np.column_stack((np.ones(aster.shape[0]),aster)),x)
-
-  aster_test = np.zeros(modis_test.shape)
-  aster_test[~edge_mask,:] = np.column_stack((aster_match[1],aster_match[0],aster_blue))
-  aster_test[edge_mask,:] = np.nan
-  aster_test[aster_test<0] = 0
-  aster_test[aster_test>1] = 1
-  ###
-
-  plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("aster_rgb_0607_match1.png");plt.close()
+  aster_test = calc.getBlueAster(aster_match,modis_bands, edge_mask, reflectance_b1.shape)
+  plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("aster_rgb_0607.png");plt.close()
   plt.figure();plt.imshow(color_img);plt.colorbar();plt.savefig("modis_rgb_0607.png");plt.close()
 
   
