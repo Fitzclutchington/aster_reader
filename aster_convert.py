@@ -34,43 +34,6 @@ if __name__=="__main__":
   
   # currently using volumetric mean radius from:
   # http://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
-  
-  lat = hdf.select('Latitude').get()
-  lon = hdf.select('Longitude').get()
-  radius = utils.getRadius(np.deg2rad(lat))
-  
-  h_step = 498
-  v_step = 420
-  base_coords = grid.degreeToSphere(lat,lon,radius)
-  corners = np.array([[base_coords[0,0,0],base_coords[0,1,0]],[base_coords[1,0,0],base_coords[1,1,0]]])
-  #surface = grid.bilinearInterp(corners, h_step, v_step)
-  full_coords = grid.geoInterp(base_coords, h_step, v_step)
-  geo_coords = grid.sphereToDegree(full_coords)
-  
-  geo_coords[:,:,0] = grid.toGeocentric(geo_coords[:,:,0])
-  
-  ds = gdal.Open('HDF4_EOS:EOS_SWATH:"{}":VNIR_Swath:ImageData1'.format(aster_file))
-  tmp_ds=gdal.AutoCreateWarpedVRT(ds)
-  projection=tmp_ds.GetProjection()
-  osrref = osr.SpatialReference()
-  osrref.ImportFromWkt(projection)
-  projstr = osrref.ExportToProj4()
-  utm = Proj(projstr)
-  
-  tx,ty = utm(geo_coords[:,:,1],geo_coords[:,:,0])
-  
-  mobj = MODIS(mhkm,m1km,m03)
-  
-  bands = mobj.reflectance([1,2,3,4])
-
-  pbands = mobj.project(projstr,tx,ty,bands,nn=1)
-  color_img = np.dstack((pbands[0],pbands[3],pbands[2]))
-  
-  #plt.figure()
-  #plt.imshow(color_img)
-  #plt.colorbar()
-  #plt.show()
-  
   b1 = hdf.select('ImageData1')
   db1 = b1.get().astype('f8')
   edge_mask = db1==0
@@ -87,7 +50,42 @@ if __name__=="__main__":
   db3N = b3N.get().astype('f8') 
   db3N[edge_mask] = np.nan
   reflectance_b3 = calc.RadToRefl ( calc.DnToRad ( db3N, 3, utils.getGain(hdf,'3N')), 3, earth_sun_dist, sza)
+
+  lat = hdf.select('Latitude').get()
+  lon = hdf.select('Longitude').get()
+  radius = utils.getRadius(np.deg2rad(lat))
   
+  h_step = int(reflectance_b1.shape[1]/10)
+  v_step = int(reflectance_b1.shape[0]/10)
+  base_coords = grid.degreeToSphere(lat,lon,radius)
+  corners = np.array([[base_coords[0,0,0],base_coords[0,1,0]],[base_coords[1,0,0],base_coords[1,1,0]]])
+  #surface = grid.bilinearInterp(corners, h_step, v_step)
+  full_coords = grid.geoInterp(base_coords, h_step, v_step)
+  geo_coords = grid.sphereToDegree(full_coords)
+  
+  geo_coords[:,:,0] = grid.toGeocentric(geo_coords[:,:,0])
+  
+  ds = gdal.Open('HDF4_EOS:EOS_SWATH:"{}":VNIR_Swath:ImageData1'.format(aster_file))
+  tmp_ds=gdal.AutoCreateWarpedVRT(ds)
+  projection=tmp_ds.GetProjection()
+  osrref = osr.SpatialReference()
+  osrref.ImportFromWkt(projection)
+  projstr = osrref.ExportToProj4()
+  utm = Proj(projstr)
+  """
+  tx,ty = utm(geo_coords[:,:,1],geo_coords[:,:,0])
+  
+  mobj = MODIS(mhkm,m1km,m03)
+  
+  bands = mobj.reflectance([1,2,3,4])
+
+  pbands = mobj.project(projstr,tx,ty,bands,nn=1)
+  color_img = np.dstack((pbands[0],pbands[3],pbands[2]))
+  
+  #plt.figure()
+  #plt.imshow(color_img)
+  #plt.colorbar()
+  #plt.show()  
   
   rfb1_proj = np.zeros(reflectance_b1.shape)
   rfb1_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b1[~edge_mask],pbands[3][~edge_mask])
@@ -219,5 +217,5 @@ if __name__=="__main__":
   aster_test = calc.getBlueAster(aster_match,modis_bands, edge_mask, reflectance_b1.shape)
   plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("images/aster_rgb_{}.png".format(file_end));plt.close()
   plt.figure();plt.imshow(color_img);plt.colorbar();plt.savefig("images/modis_rgb_{}.png".format(file_end));plt.close()
-
+  """
   
