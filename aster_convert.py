@@ -20,11 +20,11 @@ if __name__=="__main__":
   with open(filename) as f:
     config = json.load(f)
 
-  aster_file = config['aster']
-  mhkm = config['mhkm']
-  m1km = config['m1km']
-  m03 =  config['m03']
-  file_end = config['file_end']
+  aster_file = str(config['aster'])
+  mhkm = str(config['mhkm'])
+  m1km = str(config['m1km'])
+  m03 =  str(config['m03'])
+  file_end = str(config['file_end'])
 
   hdf = utils.openHDF(aster_file)
   julian_date = utils.filenameToJulian(filename)
