@@ -13,6 +13,7 @@ from scipy.io import savemat
 import calculations as calc
 import utils
 import json
+from scipy import misc
 
 if __name__=="__main__":
    
