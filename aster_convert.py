@@ -217,7 +217,7 @@ if __name__=="__main__":
   aster_match = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
   modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask], pbands[2][~edge_mask]]
   aster_test = calc.getBlueAster(aster_match,modis_bands, edge_mask, reflectance_b1.shape)
-  misc.imsave('images/rgb_aster_{}.png',np.round(aster_test*255).astype('uint8'))
-  misc.imsave('images/rgb_modis_{}.png',np.round(color_img*255).astype('uint8'))
+  misc.imsave('images/rgb_aster_{}.png'.format(file_end),np.round(aster_test*255).astype('uint8'))
+  misc.imsave('images/rgb_modis_{}.png'.format(file_end),np.round(color_img*255).astype('uint8'))
 
   
