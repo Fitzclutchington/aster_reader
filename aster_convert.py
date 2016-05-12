@@ -65,6 +65,7 @@ if __name__=="__main__":
   
   geo_coords[:,:,0] = grid.toGeocentric(geo_coords[:,:,0])
   
+  
   ds = gdal.Open('HDF4_EOS:EOS_SWATH:"{}":VNIR_Swath:ImageData1'.format(aster_file))
   tmp_ds=gdal.AutoCreateWarpedVRT(ds)
   projection=tmp_ds.GetProjection()
@@ -209,13 +210,13 @@ if __name__=="__main__":
   axarr[2,2].set_xlabel('Reflectance')
   axarr[2,2].set_ylabel('Cumulative %')
   axarr[2,2].legend(loc=5)
-
+  
   fig.savefig('images/modis_aster_{}.png'.format(file_end))
   plt.close()
   aster_match = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
   modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask], pbands[2][~edge_mask]]
   aster_test = calc.getBlueAster(aster_match,modis_bands, edge_mask, reflectance_b1.shape)
-  plt.figure();plt.imshow(aster_test);plt.colorbar();plt.savefig("images/aster_rgb_{}.png".format(file_end));plt.close()
-  plt.figure();plt.imshow(color_img);plt.colorbar();plt.savefig("images/modis_rgb_{}.png".format(file_end));plt.close()
+  misc.imsave('images/rgb_aster_{}.png',np.round(aster_test*255).astype('uint8'))
+  misc.imsave('images/rgb_modis_{}.png',np.round(color_img*255).astype('uint8'))
 
   

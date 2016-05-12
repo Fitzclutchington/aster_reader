@@ -6,3 +6,4 @@
 *.pyc
 /modis*
 *.m
+/ast_geo
