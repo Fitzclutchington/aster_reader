@@ -8,7 +8,6 @@ import sys
 import gridding as grid
 from products import MODIS
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from pykdtree.kdtree import KDTree
 from scipy.io import savemat
 import calculations as calc
 import utils
@@ -51,6 +50,12 @@ if __name__=="__main__":
   db3N = b3N.get().astype('f8') 
   db3N[edge_mask] = np.nan
   reflectance_b3 = calc.RadToRefl ( calc.DnToRad ( db3N, 3, utils.getGain(hdf,'3N')), 3, earth_sun_dist, sza)
+  
+  plt.figure()
+  plt.imshow(reflectance_b1)
+  plt.colorbar()
+  plt.title('Saturated Band 1 06-22-2015')
+  plt.savefig('satb1.png')
 
   lat = hdf.select('Latitude').get()
   lon = hdf.select('Longitude').get()
@@ -65,7 +70,6 @@ if __name__=="__main__":
   geo_coords = grid.sphereToDegree(full_coords)
   
   geo_coords[:,:,0] = grid.toGeocentric(geo_coords[:,:,0])
-  
   
   ds = gdal.Open('HDF4_EOS:EOS_SWATH:"{}":VNIR_Swath:ImageData1'.format(aster_file))
   tmp_ds=gdal.AutoCreateWarpedVRT(ds)
@@ -97,7 +101,13 @@ if __name__=="__main__":
   rfb2_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b2[~edge_mask],pbands[0][~edge_mask])
   rfb2_proj[edge_mask] = np.nan
 
-
+  plt.figure()
+  plt.imshow(rfb1_proj)
+  plt.colorbar()
+  plt.title('Deaturated Band 1 06-22-2015')
+  plt.savefig('desat.png')
+  
+  """
   #used in hist matchingto get rid of outliers
   eps = 3.5
   rfb1_match = calc.hist_match3(rfb1_proj[~edge_mask],pbands[3][~edge_mask],eps,nbins=200)
@@ -140,9 +150,9 @@ if __name__=="__main__":
   axarr[1,0].yaxis.set_visible(False)
   
   x1, y1 = calc.ecdf(rfb1_proj.ravel())
-  x4, y4 = calc.ecdf(reflectance_b1.ravel())
   x2, y2 = calc.ecdf(pbands[3].ravel())
   x3, y3 = calc.ecdf(rfb1_match.ravel())
+  x4, y4 = calc.ecdf(reflectance_b1.ravel())
 
   axarr[2,0].plot(x1,y1,'-r',label="aster")
   axarr[2,0].plot(x2,y2,'-k',label="modis")
@@ -217,7 +227,7 @@ if __name__=="__main__":
   aster_match = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
   modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask], pbands[2][~edge_mask]]
   aster_test = calc.getBlueAster(aster_match,modis_bands, edge_mask, reflectance_b1.shape)
-  misc.imsave('images/rgb_aster_{}.png'.format(file_end),np.round(aster_test*255).astype('uint8'))
-  misc.imsave('images/rgb_modis_{}.png'.format(file_end),np.round(color_img*255).astype('uint8'))
-
+  misc.imsave('images/rgb_{}_aster.png'.format(file_end),np.round(aster_test*255).astype('uint8'))
+  misc.imsave('images/rgb_{}_modis.png'.format(file_end),np.round(color_img*255).astype('uint8'))
+  """
   

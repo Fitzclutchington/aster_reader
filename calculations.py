@@ -191,9 +191,6 @@ def getBlueAster(aster_match,modis_bands,edge_mask,shape):
   
   Mhat = np.dot(CT,modis_eig.T) +ms
 
-  modis_test = np.zeros((shape[0],shape[1],3))
-  modis_test[edge_mask,:] = np.nan
-  modis_test[~edge_mask,:] = Mhat
 
   A = np.column_stack((np.ones(Mhat.shape[0]),Mhat))
   b = modis_bands[3]
