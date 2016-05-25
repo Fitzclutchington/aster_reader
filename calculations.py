@@ -176,7 +176,7 @@ def desaturate_aster(aster,aster_nonsat,modis):
 
 def getBlueAster(aster_match,modis_bands,edge_mask,shape):
   aster = np.column_stack(aster_match)
-  modis = np.column_stack(modis_bands[:-1])
+  modis = np.column_stack(modis_bands)
   ms = np.mean(np.vstack((aster,modis)),axis=0)
   Mh = aster - ms
   M = modis - ms
@@ -200,12 +200,12 @@ def getBlueAster(aster_match,modis_bands,edge_mask,shape):
   aster_blue = np.dot(np.column_stack((np.ones(aster.shape[0]),aster)),x)
   """
   print "starting kd tree"
-  k = KDTree(np.column_stack(modis[:-1]))
+  k = KDTree(modis[:,:-1])
   print "KDTree built"
-  dist, ind = k.query(np.column_stack(aster))
+  dist, ind = k.query(aster)
   print "cKDTree query completed"
   #nearest neighbor
-  nnvals = modis[3][ind]
+  nnvals = modis[:,-1][ind]
    
   aster_blue = np.zeros(shape)
   aster_blue[~edge_mask] = nnvals
