@@ -168,7 +168,7 @@ def desaturate_aster(aster,aster_nonsat,modis):
   ms = np.mean(Q,axis=0)
   d,v = np.linalg.eig(np.cov(Q.T))
   eigorder = d.argsort()
-  Pr = np.dot(np.dot((Q-ms),v[:,eigorder[-1]])[:,np.newaxis],v[:,eigorder[-1]].reshape((1,2))) + ms
+  Pr = np.dot(np.dot((Q-ms),v[:,eigorder[-1]])[:,np.newaxis],v[:,eigorder[-1]].reshape((1,3))) + ms
   #Pr = np.dot(np.dot((Q-ms),v[:,eigorder[-1]]).reshape((Q.shape[0],1)),v[:,eigorder[-1]].reshape((1,2))) + ms
   return Pr[:,0]
 
