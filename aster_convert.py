@@ -51,11 +51,6 @@ if __name__=="__main__":
   db3N[edge_mask] = np.nan
   reflectance_b3 = calc.RadToRefl ( calc.DnToRad ( db3N, 3, utils.getGain(hdf,'3N')), 3, earth_sun_dist, sza)
   
-  plt.figure()
-  plt.imshow(reflectance_b1)
-  plt.colorbar()
-  plt.title('Saturated Band 1 06-22-2015')
-  plt.savefig('satb1.png')
 
   lat = hdf.select('Latitude').get()
   lon = hdf.select('Longitude').get()
@@ -92,7 +87,7 @@ if __name__=="__main__":
   #plt.imshow(color_img)
   #plt.colorbar()
   #plt.show()  
-  
+"""
   rfb1_proj = np.zeros(reflectance_b1.shape)
   rfb1_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b1[~edge_mask],pbands[3][~edge_mask])
   rfb1_proj[edge_mask] = np.nan
@@ -100,14 +95,17 @@ if __name__=="__main__":
   rfb2_proj = np.zeros(reflectance_b1.shape)
   rfb2_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b2[~edge_mask],pbands[0][~edge_mask])
   rfb2_proj[edge_mask] = np.nan
+"""
 
-  plt.figure()
-  plt.imshow(rfb1_proj)
-  plt.colorbar()
-  plt.title('Deaturated Band 1 06-22-2015')
-  plt.savefig('desat.png')
+  rfb1_proj = np.zeros(reflectance_b1.shape)
+  rfb1_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b1[~edge_mask],reflectance_b3[~edge_mask])
+  rfb1_proj[edge_mask] = np.nan
+
+  rfb2_proj = np.zeros(reflectance_b1.shape)
+  rfb2_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b2[~edge_mask],reflectance_b3[~edge_mask])
+  rfb2_proj[edge_mask] = np.nan
   
-  """
+  
   #used in hist matchingto get rid of outliers
   eps = 3.5
   rfb1_match = calc.hist_match3(rfb1_proj[~edge_mask],pbands[3][~edge_mask],eps,nbins=200)
@@ -229,5 +227,4 @@ if __name__=="__main__":
   aster_test = calc.getBlueAster(aster_match,modis_bands, edge_mask, reflectance_b1.shape)
   misc.imsave('images/rgb_{}_aster.png'.format(file_end),np.round(aster_test*255).astype('uint8'))
   misc.imsave('images/rgb_{}_modis.png'.format(file_end),np.round(color_img*255).astype('uint8'))
-  """
   
