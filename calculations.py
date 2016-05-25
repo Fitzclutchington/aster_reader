@@ -162,9 +162,9 @@ def hist_match3(source,target,eps,nbins=100):
     
     return B.reshape(D_shape)
 
-def desaturate_aster(aster,modis):
+def desaturate_aster(aster,aster_nonsat,modis):
 
-  Q = np.column_stack((aster,modis))
+  Q = np.column_stack((aster,aster_nonsat,modis))
   ms = np.mean(Q,axis=0)
   d,v = np.linalg.eig(np.cov(Q.T))
   eigorder = d.argsort()
