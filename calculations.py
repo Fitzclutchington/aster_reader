@@ -191,12 +191,23 @@ def getBlueAster(aster_match,modis_bands,edge_mask,shape):
   
   Mhat = np.dot(CT,modis_eig.T) +ms
 
-
+  """
   A = np.column_stack((np.ones(Mhat.shape[0]),Mhat))
   b = modis_bands[3]
   x = np.linalg.lstsq(A, b)[0]
   
   aster_blue = np.dot(np.column_stack((np.ones(aster.shape[0]),aster)),x)
+  """
+
+  k = cKDTree(np.column_stack(modis[:-1]))
+  dist, ind = k.query(np.column_stack(aster),n_jobs=20, eps=0.4)
+  print "cKDTree query completed"
+  #nearest neighbor
+  nnvals = modis[3][ind]
+   
+  aster_blue = np.zeros(shape)
+  aster_blue[~edge_mask] = nnvals
+  aster_blue[edge_mask] = np.nan
 
   aster_test = np.zeros((shape[0],shape[1],3))
   aster_test[~edge_mask,:] = np.column_stack((aster_match[1],aster_match[0],aster_blue))
