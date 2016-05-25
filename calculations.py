@@ -179,7 +179,7 @@ def getBlueAster(aster_match,modis_bands,edge_mask,shape):
   modis = np.column_stack(modis_bands)
   ms = np.mean(np.vstack((aster,modis[:,:-1])),axis=0)
   Mh = aster - ms
-  M = modis - ms
+  M = modis[:,:-1] - ms
   d,v = np.linalg.eig(np.cov(Mh.T))
   eigorder = d.argsort()
   aster_eig = v[:,eigorder[-1]]
