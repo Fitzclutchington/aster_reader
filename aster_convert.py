@@ -87,7 +87,7 @@ if __name__=="__main__":
   #plt.imshow(color_img)
   #plt.colorbar()
   #plt.show()  
-"""
+  """
   rfb1_proj = np.zeros(reflectance_b1.shape)
   rfb1_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b1[~edge_mask],pbands[3][~edge_mask])
   rfb1_proj[edge_mask] = np.nan
@@ -95,7 +95,7 @@ if __name__=="__main__":
   rfb2_proj = np.zeros(reflectance_b1.shape)
   rfb2_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b2[~edge_mask],pbands[0][~edge_mask])
   rfb2_proj[edge_mask] = np.nan
-"""
+  """
 
   rfb1_proj = np.zeros(reflectance_b1.shape)
   rfb1_proj[~edge_mask] =  calc.desaturate_aster(reflectance_b1[~edge_mask],reflectance_b3[~edge_mask])
