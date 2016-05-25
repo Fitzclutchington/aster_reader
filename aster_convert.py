@@ -127,7 +127,7 @@ if __name__=="__main__":
   rfb3_match_full[~edge_mask]=rfb3_match
   rfb3_match_full[edge_mask]=np.nan
   
-  
+  """
   fig, axarr = plt.subplots(3,3, figsize=(30,20))
   img1 = axarr[0,0].imshow(pbands[3], vmin=0,vmax=1)
   axarr[0,0].set_title('Modis band 4')
@@ -219,9 +219,10 @@ if __name__=="__main__":
   axarr[2,2].set_xlabel('Reflectance')
   axarr[2,2].set_ylabel('Cumulative %')
   axarr[2,2].legend(loc=5)
-  
-  fig.savefig('images/modis_aster_{}.png'.format(file_end))
-  plt.close()
+  """
+
+  #fig.savefig('images/modis_aster_{}.png'.format(file_end))
+  #plt.close()
   aster_match = [rfb1_match_full[~edge_mask],rfb2_match_full[~edge_mask],rfb3_match_full[~edge_mask]]
   modis_bands = [pbands[3][~edge_mask],pbands[0][~edge_mask],pbands[1][~edge_mask], pbands[2][~edge_mask]]
   aster_test = calc.getBlueAster(aster_match,modis_bands, edge_mask, reflectance_b1.shape)

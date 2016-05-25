@@ -199,10 +199,10 @@ def getBlueAster(aster_match,modis_bands,edge_mask,shape):
   
   aster_blue = np.dot(np.column_stack((np.ones(aster.shape[0]),aster)),x)
   """
-
+  print "starting kd tree"
   k = KDTree(np.column_stack(modis[:-1]))
   print "KDTree built"
-  dist, ind = k.query(np.column_stack(aster),n_jobs=20, eps=0.4)
+  dist, ind = k.query(np.column_stack(aster))
   print "cKDTree query completed"
   #nearest neighbor
   nnvals = modis[3][ind]
