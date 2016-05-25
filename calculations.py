@@ -198,7 +198,7 @@ def getBlueAster(aster_match,modis_bands,edge_mask,shape):
   
   aster_blue = np.dot(np.column_stack((np.ones(aster.shape[0]),aster)),x)
 
-  aster_test = np.zeros((aster_match[0].shape[0],aster_match[0].shape[1],3))
+  aster_test = np.zeros((shape[0],shape[1],3))
   aster_test[~edge_mask,:] = np.column_stack((aster_match[1],aster_match[0],aster_blue))
   aster_test[aster_test<0] = 0
   aster_test[aster_test>1] = 1
