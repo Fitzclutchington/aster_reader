@@ -1,5 +1,6 @@
 import numpy as np
-import pykdtree as pkd
+from pykdtree.kdtree import KDTree
+
 def DnToRad ( data, band, gain ):
   """formula and table come from pg 25,26 in ASTER man"""
 
@@ -199,7 +200,8 @@ def getBlueAster(aster_match,modis_bands,edge_mask,shape):
   aster_blue = np.dot(np.column_stack((np.ones(aster.shape[0]),aster)),x)
   """
 
-  k = pkd.KDTree(np.column_stack(modis[:-1]))
+  k = KDTree(np.column_stack(modis[:-1]))
+  print "KDTree built"
   dist, ind = k.query(np.column_stack(aster),n_jobs=20, eps=0.4)
   print "cKDTree query completed"
   #nearest neighbor
