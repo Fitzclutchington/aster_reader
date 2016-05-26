@@ -81,7 +81,16 @@ if __name__=="__main__":
   bands = mobj.reflectance([1,2,3,4])
 
   pbands = mobj.project(projstr,tx,ty,bands,nn=1)
+  
+  tx_min = tx.min()
+  tx_max = tx.max()
+  ty_min = ty.min()
+  ty_max = ty.max()
+  
+  tx2 = tx[:,::500]
+  ty2 = tx[::500,:]
 
+  
   print "tx (1,0) - (0,0) = " + str(tx[1,0]-tx[0,0])
   print "tx (0,1) - (0,0) = " + str(tx[0,1]-tx[0,0])
 
